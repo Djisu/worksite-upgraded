@@ -1,7 +1,7 @@
-This is app which brings artisans and clients together. It is being built using Reactjs, Redux, Expressjs, Nodejs and MongoAtlas.
+This is an app which brings artisans and clients together. It is being built using Reactjs, Redux, Expressjs, Nodejs and MongoAtlas.
 It is a single-page app and responsive. It will soon be deployed to Netlify. The images used in the app is deployed on Firebase.
 
-It is used by artisans to arvertise their services. A client can use it to hire the service of an artisan.
+It is used by artisans to advertise their services. A client can use it to hire the service of an artisan.
 
 When a client gets to the home page, he/she can instantly browse through the posted services and select the needed service. A new client is required to
 register as hirer to be allowed to engage the service. This action allows the app to obtain the details of the client to be used to process the contract.
