@@ -1,64 +1,63 @@
+//THIS FUNCTION IS USED TO MAKE CHANES TO AN EXISTING SERVICE.
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { addToService } from '../actions/serviceActions'
+import { detailsService, updateService } from '../actions/serviceActions'
 import LoadingBox from '../components/LoadingBox'
 import MessageBox from '../components/MessageBox'
+import { SERVICE_UPDATE_RESET } from '../constants/serviceConstants'
 import { storage } from '../firebase'
 
 export default function ServiceScreen(props) {
+  const serviceId = props.location.state.id
+  const category = props.location.state.category
+  const picture = props.location.state.image
+
+  console.log('picture=', picture)
+
+  //const [category, setCategory] = useState('') //
+  const [name, setName] = useState('')
+  let [image, setImage] = useState([])
+  const [unitPrice, setUnitPrice] = useState(0)
+  const [description, setDescription] = useState('')
+  let [delay, setDelay] = useState(0)
+  const [transdate, setTransDate] = useState()
+  const [photo, setPhoto] = useState('')
+
+  const serviceDetails = useSelector((state) => state.serviceDetails)
+  const { loading, error, service } = serviceDetails
+
+  //console.log('props.location.state is=oooooooooooo', props.location.state)
+
+  const serviceUpdate = useSelector((state) => state.serviceUpdate)
+  const {
+    loading: loadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = serviceUpdate
+
   const dispatch = useDispatch()
 
-  const state = {
+  const flag = {
     button: 1,
   }
 
-  const userSignin = useSelector((state) => state.userSignin)
-  const { userInfo, loading, error } = userSignin
-
-  const [addrtype, setAddrtype] = useState([
-    'Printer',
-    'carpenter',
-    'mason',
-    'electrician',
-    'plumber',
-    'Mechanic',
-    'Tiler',
-    'Black smith',
-    'Painter',
-    'Cleaner',
-  ])
-
-  //setCategory(['Printer', 'carpenter', 'mason', 'electrician', 'plumber'])
-
-  let Add = addrtype.map((item) => item)
-
-  const handleCategoryChange = (e) => {
-    setCategory(addrtype[e.target.value])
-    //setAddrtype('') //YOU CAN STILL DISABLE THIS LINE
-  }
-  const [category, setCategory] = useState('Printer') //
-
-  const [name, setName] = useState('')
-
-  let [image, setImage] = useState([])
-
-  let [photo, setPhoto] = useState('')
-
-  const [unitPrice, setUnitPrice] = useState(0)
-
-  const [description, setDescription] = useState('')
-
-  const [telno, setTelno] = useState('') //
-
-  let [delay, setDelay] = useState(0)
-  const [transDate, setTransDate] = useState(new Date())
-
-  const [expireDate, setExpireDate] = useState(new Date())
-
-  const [serviceFees, setServiceFees] = useState(0)
-
-  const email = userInfo.email
+  useEffect(() => {
+    if (successUpdate) {
+      props.history.push('/servicelist')
+    }
+    if (!service || service._id !== serviceId || successUpdate) {
+      dispatch({ type: SERVICE_UPDATE_RESET })
+      dispatch(detailsService(serviceId))
+    } else {
+      //setCategory(props.location.state.category)
+      setName(service.name)
+      setImage(service.image)
+      setUnitPrice(service.unitPrice)
+      setDescription(service.description)
+      setDelay(service.delay)
+    }
+  }, [dispatch, successUpdate, props.history]) // [service, dispatch, serviceId, successUpdate, props.history])
 
   const rating = 0
   const numReviews = 0
@@ -67,15 +66,6 @@ export default function ServiceScreen(props) {
     ? props.location.search.split('=')[1]
     : '/'
 
-  useEffect(() => {
-    if (!userInfo) {
-      props.history.push(redirect)
-    }
-  }, [props.history, redirect, userInfo])
-
-  //fileupload modules  userInfo.employmentStatu
-  //const [image, setImage] = useState(null)
-  //const [url, setUrl] = useState('')
   const [url, setUrl] = useState(null)
   const [progress, setProgress] = useState(0)
 
@@ -88,7 +78,7 @@ export default function ServiceScreen(props) {
   const submitHandler = (e) => {
     e.preventDefault()
 
-    if (state.button === 1) {
+    if (flag.button === 1) {
       console.log('instate.button === 1 uploadImage')
 
       const uploadTask = storage.ref(`images/${image.name}`).put(image)
@@ -116,16 +106,24 @@ export default function ServiceScreen(props) {
       //return //image
     }
 
-    if (state.button === 2) {
+    if (flag.button === 2) {
       console.log('in state.button === 2 submit form')
+      // setEmail(userInfo.email)
+      if (delay === 0) {
+        console.log('Delay not found!!')
+        return
+      }
+      if (delay > 0) {
+        console.log('delay===', delay)
 
-      delay = parseInt
+        delay = parseInt(delay)
 
-      let myDate = new Date()
-      let newDate = new Date(myDate.setDate(myDate.getDate() + delay))
+        let myDate = new Date()
+        let newDate = new Date(myDate.setDate(myDate.getDate() + delay))
 
-      setTransDate(new Date())
-      setExpireDate(newDate)
+        setTransDate(new Date())
+        //setExpireDate(newDate)
+      }
 
       if (
         document.querySelector('img').src ===
@@ -135,233 +133,141 @@ export default function ServiceScreen(props) {
         return
       }
 
-      console.log('in submitHandler  addclick === true)')
-
-      console.log(
-        'document.querySelector(img).src',
-        document.querySelector('img').src,
-      )
-
       setPhoto(document.querySelector('img').src)
-
-      console.log('photo is ', photo)
 
       if (photo === 'http://via.placeholder.com/200X200') {
         return
       }
 
       image = document.querySelector('img').src
-      console.log('image is ', image)
 
-      if (!image) {
-        console.log('No image loaded')
-        return
-      }
+      console.log('delay=================', delay)
 
-      if (!name) {
-        alert('Name cannot be empty')
-        return
-      }
-      if (!image) {
-        alert('Image cannot be empty')
-        return
-      }
-      if (!description) {
-        alert('Description cannot be empty')
-        return
-      }
-
+      console.log('about to dispatch(updateService ', {
+        _id: serviceId,
+        name,
+        image,
+        unitPrice,
+        description,
+        delay,
+      })
       dispatch(
-        addToService(
-          category,
-          email,
+        updateService({
+          _id: serviceId,
           name,
           image,
           unitPrice,
-          rating,
-          numReviews,
           description,
-          telno,
           delay,
-          transDate,
-          expireDate,
-          serviceFees,
-        ),
+        }),
       )
-      setCategory('')
-      setName('')
-      setImage([])
-      setUnitPrice(0)
-      setDescription('')
-      setTelno('')
-      setServiceFees(0)
     }
   }
 
   return (
     <div>
-      <Link to="/">Back to results</Link>
+      <Link to="/serviceList">Back to results</Link>
       <div className="col-2">
-        {userInfo.employmentStatus === 'Employee' && (
-          <h4 style={{ color: 'red' }}>
-            Employee cannot create services. Change employment status to
-            employer to create a service
-          </h4>
-        )}
-        {!userInfo && <h4>Add email address to your profile</h4>}
-        {loading && <LoadingBox></LoadingBox>}
-        {error && <MessageBox variant="danger">{error}</MessageBox>}
-
         <form className="form" onSubmit={submitHandler}>
           <div>
-            <h1>Create New Service</h1>
+            <h1>Edit Old Service</h1>
           </div>
-          <div>
-            <label>
-              Pick your category of service:
+          {/* {!userInfo && <h4>Add email address to your profile</h4>} */}
+          {loadingUpdate && <LoadingBox></LoadingBox>}
+          {errorUpdate && <MessageBox variant="danger">{error}</MessageBox>}
+          {loading ? (
+            <LoadingBox></LoadingBox>
+          ) : error ? (
+            <MessageBox variant="danger">{error}</MessageBox>
+          ) : (
+            <>
+              <div style={{ textAlign: 'center', padding: '2rem' }}>
+                <img
+                  className="medium"
+                  src={picture}
+                  alt={props.location.state.name}
+                />
+              </div>
+              Service Id: {serviceId}
+              <div>
+                <label>
+                  Give your service a nice name
+                  <br />
+                  <input
+                    type="text"
+                    id="name"
+                    placeholder="Name"
+                    // value={props.location.state.name}
+                    onChange={(e) => setName(e.target.value)}
+                  ></input>
+                </label>
+              </div>
               <br />
-              <select
-                onChange={(e) => handleCategoryChange(e)}
-                className="browser-default custom-select"
-              >
-                {Add.map((category, key) => (
-                  <option key={key} value={key}>
-                    {category}
-                  </option>
-                ))}
-              </select>
+              <div>
+                <label>
+                  Describe your service
+                  <br />
+                  <textarea
+                    type="text"
+                    id="description"
+                    placeholder="Description"
+                    // value={props.location.state.description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  ></textarea>
+                </label>
+              </div>
               <br />
-            </label>
-            <br />
-          </div>
-          <div>
-            <label>
-              Give your service a nice name
               <br />
-              <input
-                type="text"
-                id="name"
-                placeholder="Name"
-                requires
-                onChange={(e) => setName(e.target.value)}
-              ></input>
-            </label>
-          </div>
-          <br />
-          <div>
-            <label>
-              Describe your service
+              <div>
+                <label>
+                  State the unit price of your service <br />
+                  <input
+                    type="float"
+                    id="unitPrice"
+                    placeholder="Enter the unit price for your service"
+                    // value={props.location.state.unitPrice}
+                    onChange={(e) => setUnitPrice(e.target.value)}
+                  ></input>
+                  per contract/day/hour: state in description
+                </label>
+              </div>
               <br />
-              <textarea
-                type="text"
-                id="description"
-                placeholder="Description"
-                requires
-                onChange={(e) => setDescription(e.target.value)}
-              ></textarea>
-            </label>
-          </div>
-          <br />
-          <div>
-            <label>
-              Your Mobile Number
+              <div>
+                <label>
+                  Give the number of days to display your service
+                  <br />
+                  <input
+                    type="number"
+                    id="delay"
+                    placeholder="Number of days"
+                    onChange={(e) => setDelay(e.target.value)}
+                  ></input>
+                </label>
+              </div>
               <br />
-              <input
-                type="text"
-                id="telno"
-                placeholder="Mobile Number"
-                requires
-                onChange={(e) => setTelno(e.target.value)}
-              ></input>
-            </label>
-          </div>
-          <br />
-          <div>
-            <label>
-              State the unit price of your service
               <br />
-              <input
-                type="float"
-                id="unitPrice"
-                placeholder="Enter the unit price for your service"
-                requires
-                onChange={(e) => setUnitPrice(e.target.value)}
-              ></input>
-              per contract/day/hour: state in description
-            </label>
-          </div>
-          <br />
-          <div>
-            <label>
-              Give the number of days to display your service
+              {/*  Owner's Email: {service.email}
+              <br /> */}
               <br />
-              <input
-                type="number"
-                id="delay"
-                placeholder="Number of days"
-                requires
-                onChange={(e) => setDelay(e.target.value)}
-              ></input>
-            </label>
-          </div>
-          <br />
-          <br />
-          Owner's Email: {userInfo.email}
-          <div>
-            {/*  <label>
-              Upload the image for your service
               <br />
-              <input
-                type="text"
-                id="image"
-                placeholder="Select your image for your service"
-                requires
-                onChange={(e) => setImage(e.target.value)}
-              ></input>
-            </label>  () => (state.button = 1)    <button onClick={handleUpload}>Upload</button>
-            Copy image */}
-            {/* <FileUpload></FileUpload> */}
-            <div>
-              <progress value={progress} max="100" />
               <br />
-              <input type="file" onChange={handleChange} />
-              {/* <button onClick={handleUpload}>Upload</button> */}
+              <label />
               <button
                 className="primary"
                 type="submit"
-                onClick={() => (state.button = 1)}
+                onClick={() => (flag.button = 2)}
               >
-                Upload
+                Update Service
               </button>
-              <br />
-              {url}
-              <br />
-              <img
-                className="small-medium"
-                src={url || 'http://via.placeholder.com/200X200'}
-                alt="firebase-imagex"
-              />
-              <br />
-              {/* Copy image link and paste it in upload work documents */}
-            </div>
-          </div>
-          <br />
-          <label />
-          {/* <button className="primary" type="submit"> */}
-          <button
-            className="primary"
-            type="submit"
-            onClick={() => (state.button = 2)}
-          >
-            Add Service
-          </button>
-          <div>
-            <label />
-            <div>
-              Already have an account?{' '}
-              <Link to={`/signin?redirect=${redirect}`}>Sign-In</Link>
-            </div>
-          </div>
+              <div>
+                <label />
+                <div>
+                  Already have an account?{' '}
+                  <Link to={`/signin?redirect=${redirect}`}>Sign-In</Link>
+                </div>
+              </div>
+            </>
+          )}
         </form>
       </div>
     </div>

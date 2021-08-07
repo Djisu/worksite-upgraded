@@ -10,6 +10,9 @@ import {
   SERVICE_ENTRY_REQUEST,
   SERVICE_ENTRY_RESET,
   SERVICE_ENTRY_SUCCESS,
+  SERVICE_GET_FAIL,
+  SERVICE_GET_REQUEST,
+  SERVICE_GET_SUCCESS,
   SERVICE_LIST_FAIL,
   SERVICE_LIST_REQUEST,
   SERVICE_LIST_SUCCESS,
@@ -19,6 +22,7 @@ import {
   SERVICE_REVIEW_CREATE_SUCCESS,
   SERVICE_UPDATE_FAIL,
   SERVICE_UPDATE_REQUEST,
+  SERVICE_UPDATE_RESET,
   SERVICE_UPDATE_SUCCESS,
 } from '../constants/serviceConstants'
 
@@ -125,6 +129,25 @@ export const deleteServiceReducer = (
   }
 }
 
+export const getServiceReducer = (
+  state = { service: {}, loading: true },
+  action,
+) => {
+  switch (action.type) {
+    case SERVICE_GET_REQUEST:
+      return { loading: true }
+
+    case SERVICE_GET_SUCCESS:
+      return { loading: false, service: action.payload }
+
+    case SERVICE_GET_FAIL:
+      return { loading: false, error: action.payload }
+
+    default:
+      return state
+  }
+}
+
 export const serviceReviewCreateReducer = (
   state = { loading: true, review: {} },
   action,
@@ -157,6 +180,9 @@ export const serviceUpdateReducer = (state = {}, action) => {
 
     case SERVICE_UPDATE_FAIL:
       return { loading: false, error: action.payload }
+
+    case SERVICE_UPDATE_RESET:
+      return {}
 
     default:
       return state

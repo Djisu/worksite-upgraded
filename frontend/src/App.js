@@ -100,12 +100,12 @@ function App() {
                           <li>
                             <Link to="/contractlist">List your Contracts</Link>
                           </li>
-                          <li>
+                          {/*  <li>
                             <Link to="/editService">Edit your Service</Link>
                           </li>
                           <li>
                             <Link to="/editContract">Edit your Contract</Link>
-                          </li>
+                          </li> */}
                         </div>
                       )}
 

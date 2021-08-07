@@ -20,6 +20,9 @@ import {
   SERVICE_UPDATE_SUCCESS,
   SERVICE_UPDATE_FAIL,
   SERVICE_ADD_SUCCESS,
+  SERVICE_GET_REQUEST,
+  SERVICE_GET_SUCCESS,
+  SERVICE_GET_FAIL,
 } from '../constants/serviceConstants'
 
 export const enterServiceDetails = (service) => async (dispatch, getState) => {
@@ -137,12 +140,12 @@ export const addToService = (
 export const detailsService = (serviceEmail) => async (dispatch) => {
   dispatch({ type: SERVICE_DETAILS_REQUEST, payload: serviceEmail })
   try {
-    console.log('in detailsService serviceEmail==', serviceEmail)
+    // console.log('in detailsService serviceEmail==', serviceEmail)
 
     const { data } = await Axios.get(`/api/services/${serviceEmail}`)
 
     // console.log('serviceEmail==' + serviceEmail)
-    console.log('detailsService data=====', data)
+    // console.log('detailsService data=====', data)
 
     dispatch({
       type: SERVICE_DETAILS_SUCCESS,
@@ -173,6 +176,35 @@ export const deleteService = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: SERVICE_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+export const getService = (id) => async (dispatch, getState) => {
+  console.log('in getService ' + id)
+
+  dispatch({
+    type: SERVICE_GET_REQUEST,
+  })
+
+  console.log(
+    '  after dispatch({ type: SERVICE_LIST_REQUEST, payload: id }) ' + id,
+  )
+
+  try {
+    const { data } = await Axios.get(`/api/services/${id}`)
+
+    console.log('data=', data)
+
+    dispatch({ type: SERVICE_GET_SUCCESS, payload: data })
+    localStorage.setItem('serviceItems', JSON.stringify(data))
+  } catch (error) {
+    dispatch({
+      type: SERVICE_GET_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
@@ -217,22 +249,28 @@ export const createReview = (serviceId, review) => async (
 }
 
 export const updateService = (service) => async (dispatch, getState) => {
-  console.log('in updateService')
-
-  console.log('user==', service)
+  console.log('in updateService service===', service)
 
   dispatch({ type: SERVICE_UPDATE_REQUEST, payload: service })
   const {
     userSignin: { userInfo },
   } = getState()
 
+  console.log('userInfo.token=', userInfo.token)
+
   try {
-    const { data } = await Axios.put(`/api/users/profile`, service, {
+    const { data } = await Axios.put(`/api/services/${service._id}`, service, {
       headers: { Authorization: `Bearer ${userInfo.token}` },
     })
+
     dispatch({ type: SERVICE_UPDATE_SUCCESS, payload: data })
 
-    localStorage.setItem('serviceItems', JSON.stringify(data))
+    console.log(
+      'After  dispatch({ type: SERVICE_UPDATE_SUCCESS, payload: data })',
+      data,
+    )
+
+    localStorage.setItem('serviceItems', JSON.stringify(service))
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -240,67 +278,5 @@ export const updateService = (service) => async (dispatch, getState) => {
         : error.message
 
     dispatch({ type: SERVICE_UPDATE_FAIL, payload: message })
-  }
-}
-
-export const editService = (
-  category,
-  email,
-  name,
-  image,
-  unitPrice,
-  rating,
-  numReviews,
-  description,
-  telno,
-  delay,
-  transDate,
-  expireDate,
-  serviceFees,
-) => async (dispatch, getState) => {
-  console.log('in addToService')
-
-  dispatch({ type: SERVICE_ENTRY_REQUEST })
-
-  try {
-    const {
-      userSignin: { userInfo },
-    } = getState()
-
-    const { data } = await Axios.put(
-      '/api/services',
-      {
-        category,
-        email,
-        name,
-        image,
-        unitPrice,
-        rating,
-        numReviews,
-        description,
-        telno,
-        delay,
-        transDate,
-        expireDate,
-        serviceFees,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      },
-    )
-    dispatch({ type: SERVICE_ENTRY_SUCCESS, payload: data }) // data.service
-    dispatch({ type: SERVICE_ADD_SUCCESS, payload: data })
-
-    localStorage.setItem('serviceItems', JSON.stringify(data)) // data.service
-  } catch (error) {
-    dispatch({
-      type: SERVICE_ENTRY_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    })
   }
 }

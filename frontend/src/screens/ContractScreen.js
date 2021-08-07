@@ -11,6 +11,12 @@ import MessageBox from '../components/MessageBox'
 import { storage } from '../firebase'
 
 export default function ContractScreen(props) {
+  console.log('props.location.state=', props.location.state)
+
+  let newState
+  newState = newState ? props.location.state : ''
+  console.log('props.location.state.name: ', props.location.state.name)
+
   const redirect = props.location.search
     ? props.location.search.split('=')[1]
     : '/'
@@ -28,6 +34,8 @@ export default function ContractScreen(props) {
   let serviceList = useSelector((state) => state.serviceList)
   let { services } = serviceList
 
+  console.log('services====', services)
+
   let userSignin = useSelector((state) => state.userSignin)
   let { userInfo } = userSignin
 
@@ -42,6 +50,11 @@ export default function ContractScreen(props) {
   let [comments, setComments] = useState('')
   let [quantity, setQuantity] = useState(0)
 
+  let [user, setUser] = useState(userInfo._id)
+  let [serviceEmail, setServiceEmail] = useState(props.location.state.email)
+  let [email, setEmail] = useState(userInfo.email)
+  let [telno, setTelno] = useState(userInfo.telno)
+
   let unitPrice = 0
   unitPrice = unitPrice ? props.location.state.unitPrice : 0
 
@@ -51,22 +64,27 @@ export default function ContractScreen(props) {
   let [totalCost, setTotalCost] = useState(0)
   let [isPaid, setIsPaid] = useState(false)
   let [isCompleted, setIsCompleted] = useState(false)
-  let [service, setService] = useState(servid) //props.location.state._id
+  let [service, setService] = useState(props.location.state.name) //props.location.state._id
+  let [imagex, setImagex] = useState(props.location.state.image)
 
-  let user = ''
-  user = user ? userInfo._id : ''
+  //let user = ''
+  /* user = user ? userInfo._id : ''
+ setUser(user) */
 
-  let serviceEmail = ''
-  serviceEmail = serviceEmail ? props.location.state.email : ''
+  //let serviceEmail = ''
+  /*  serviceEmail = serviceEmail ? props.location.state.email : ''
+  setServiceEmail(serviceEmail) */
 
-  let email = ''
-  email = email ? userInfo.email : ''
+  // let email = ''
+  /*  email = email ? userInfo.email : ''
+  setEmail(email) */
 
-  let telno = ''
-  telno = telno ? userInfo.telno : ''
+  //let telno = ''
+  /*  telno = telno ? userInfo.telno : ''
+  setTelno(telno) */
 
-  let serviceName = ''
-  serviceName = serviceName ? props.location.state.name : ''
+  /* let serviceName = ''
+  serviceName = serviceName ? props.location.state.name : '' */
 
   const [image, setImage] = useState(null)
   const [url, setUrl] = useState(null)
@@ -140,26 +158,36 @@ export default function ContractScreen(props) {
     if (state.button === 2) {
       console.log('in state.button === 2 ')
 
-      delay = parseInt(delay)
+      // setService(props.location.state.name)
+
+      console.log('description=', description)
+
+      //delay = parseInt(delay)
+      console.log('delay again is===', delay)
 
       let myDate = new Date()
       let newDate = new Date(myDate.setDate(myDate.getDate() + delay))
 
-      let varTotalCost = quantity * props.location.state.unitPrice
+      console.log('newDate=', newDate)
+
+      const varTotalCost = quantity * props.location.state.unitPrice
+
+      console.log('varTotalCost======', varTotalCost)
 
       setTransDate(new Date())
       setCompleteDate(newDate)
       setComments('No comments for now')
-      setQuantity(quantity)
+      setIsPaid(false)
+      setIsCompleted(false)
+      //setService(props.location.state.name) //props.location.state._id
+      //setQuantity(quantity)
+      console.log('service name==', service)
 
-      setTotalCost(varTotalCost)
+      setTotalCost(quantity * props.location.state.unitPrice)
 
       console.log('documents:', documents)
 
-      console.log('totalCost=', varTotalCost * props.location.state.unitPrice)
-
-      setIsPaid(false)
-      setIsCompleted(false)
+      console.log('totalCost======', totalCost)
 
       if (!delay) {
         alert('Enter the expected days')
@@ -191,15 +219,17 @@ export default function ContractScreen(props) {
           email,
           telno,
           serviceEmail,
+          imagex,
         ),
       )
+      props.history.push('/')
       //Initialize states here
-      setDelay(0)
+      /*  setDelay(0)
       setDescription('')
       setDocuments([])
       setComments('')
       setQuantity(0)
-      setTotalCost(0)
+      setTotalCost(0) */
     }
   }
 
@@ -225,26 +255,14 @@ export default function ContractScreen(props) {
           <div>
             <h1>Create New Contract</h1>
           </div>
-
-          <div>
-            <label>
-              Selected service:
-              <br />
-              <select
-                onChange={(e) => handleServiceChange(e)}
-                className="browser-default custom-select"
-                value={serviceName} //props.location.state.name
-              >
-                {services.map((service) => (
-                  <option key={service.name} value={service.name}>
-                    {service.name}
-                  </option>
-                ))}
-              </select>
-              <br />
-            </label>
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <img
+              className="medium"
+              src={props.location.state.image}
+              alt={props.location.state.name}
+            />
           </div>
-
+          Service selected: {props.location.state.name}
           <div>
             <label>
               Give the number of days to complete contract
@@ -254,6 +272,7 @@ export default function ContractScreen(props) {
                 id="delay"
                 placeholder="Number of days"
                 requires
+                onBlur={(e) => console.log('onBlur delay=', e.target.value)}
                 onChange={(e) => setDelay(e.target.value)}
               ></input>
             </label>
@@ -268,13 +287,16 @@ export default function ContractScreen(props) {
                 id="description"
                 placeholder="Decribe what to be done"
                 requires
+                onBlur={(e) => console.log('description====', description)}
                 onChange={(e) => setDescription(e.target.value)}
               ></textarea>
             </label>
           </div>
           <br />
-
-          <label style={{ color: 'blue' }}> Unit Price: {unitPrice}</label>
+          <label style={{ color: 'blue' }}>
+            {' '}
+            Unit Price: {props.location.state.unitPrice}
+          </label>
           <div>
             <label>
               State quantity to be produced
@@ -284,13 +306,16 @@ export default function ContractScreen(props) {
                 id="quantity"
                 placeholder="Enter the quantity needed"
                 requires
+                onBlur={(e) =>
+                  setTotalCost(props.location.state.unitPrice * e.target.value)
+                }
                 onChange={(e) => setQuantity(e.target.value)}
               ></input>
             </label>
           </div>
           <label style={{ color: 'blue' }}>
             {' '}
-            Total Cost: {unitPrice * quantity}
+            Total Cost: {props.location.state.unitPrice * quantity}
           </label>
           <div>
             <div>
@@ -330,13 +355,12 @@ export default function ContractScreen(props) {
             </div>
           </div>
           <br />
-
           <button
             className="primary"
             type="submit"
             onClick={() => (state.button = 2)}
           >
-            Add Service
+            Add Contract
           </button>
           <div>
             <h4>Documents List:</h4>

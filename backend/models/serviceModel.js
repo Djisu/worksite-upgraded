@@ -14,18 +14,18 @@ const reviewSchema = new mongoose.Schema(
 const serviceSchema = new mongoose.Schema(
   {
     category: { type: String, required: true },
-    email: { type: String, required: true },
+    email: { type: String },
     name: { type: String, required: true },
     image: { type: String },
     unitPrice: { type: Number, required: true },
-    rating: { type: Number, required: true },
-    numReviews: { type: Number, required: true },
+    rating: { type: Number },
+    numReviews: { type: Number },
     description: { type: String, required: true },
     telno: { type: String },
     reviews: [reviewSchema],
     delay: { type: Number, required: true },
-    transDate: { type: Date, required: true },
-    expireDate: { type: Date, required: true },
+    transDate: { type: Date },
+    expireDate: { type: Date },
     serviceFees: { type: Number },
   },
   {

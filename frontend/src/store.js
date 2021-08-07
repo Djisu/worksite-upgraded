@@ -22,6 +22,7 @@ import {
   deleteServiceReducer,
   serviceReviewCreateReducer,
   serviceUpdateReducer,
+  getServiceReducer,
 } from './reducers/serviceReducers'
 import {
   userDetailsReducer,
@@ -75,6 +76,7 @@ const reducer = combineReducers({
   addToService: addToServiceReducer,
   service: addToServiceReducer,
   deleteService: deleteServiceReducer,
+  getService: getServiceReducer,
 
   contractList: contractListReducer,
   contractDetails: contractDetailsReducer,

@@ -21,11 +21,12 @@ export default function Service(props) {
 
     //console.log('in  service.js handleClick')
 
-    //console.log('service._id==', service._id, service.name)
+    console.log('service._id==', service._id, service.name)
 
     if (!userInfo) {
       history.push('/signin')
     } else {
+      console.log('service =', service)
       history.push('/contract', service)
     }
   }

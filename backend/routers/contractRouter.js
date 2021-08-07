@@ -39,7 +39,7 @@ contractRouter.post(
     if (!req.body) {
       res.status(400).send({ message: 'Contract is empty' })
     } else {
-      //console.log('in contractRouter.post')
+      console.log('in contractRouter.post')
 
       //const varTelno = req.body.telno
 
@@ -60,15 +60,16 @@ contractRouter.post(
         email: req.body.email,
         telno: req.body.telno,
         serviceEmail: req.body.serviceEmail,
+        image: req.body.imagex,
       })
-      //console.log('new Contract==', contract)
+      console.log('new Contract==', contract)
 
       //await Contract.remove({})
 
       const createdContract = await contract.save()
 
-      /*  console.log('Contract created==', createdContract)
-      console.log('About to send email') */
+      console.log('Contract created==', createdContract)
+      console.log('About to send email')
 
       //Email sending
       var transporter = nodemailer.createTransport({
@@ -124,30 +125,68 @@ contractRouter.post(
     }
   }),
 )
+/* serviceRouter.put(
+  '/:id',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    console.log('in serviceRouter.put req ooooooooooo', req.params._id)
+    const serviceId = req.params.id
+
+    const service = await Service.findById(serviceId)
+
+    if (service) {
+      service.name = req.body.name
+      service.image = req.body.image
+      service.unitPrice = req.body.unitPrice
+      service.description = req.body.description
+      service.delay = req.body.delay
+
+      const updatedService = await service.save()
+
+      console.log('updatedService==', updatedService)
+
+      res.send({ message: 'Service Updated', service: updatedService })
+    } else {
+      res.status(404).send({ message: 'Service Not Found' })
+    }
+  }),
+) */
 
 contractRouter.put(
   // WORK ON THIS. IT IS NOT COMPLETE!!!!
-  '/',
+  '/:id',
   isAuth,
   expressAsyncHandler(async (req, res) => {
-    const contract = await Contract.findById(req.contract._id)
+    console.log('contract.put', req.params._id)
+    const contractid = req.params._id
+
+    const contract = await Contract.findById(contractid)
 
     if (contract) {
-      user.name = req.body.name || user.name
-      user.email = req.body.email || user.email
+      contract.user = req.body.user
+      contract.delay = req.body.delay
+      contract.transDate = req.body.transDate
+      contract.completeDate = req.body.completeDate
+      contract.description = req.body.description
+      contract.documents = req.body.documents
+      contract.comments = req.body.comments
+      contract.quantity = req.body.quantity
+      contract.unitPrice = req.body.unitPrice
+      contract.totalCost = req.body.totalCost
+      contract.isPaid = req.body.isPaid
+      contract.isCompleted = req.body.isCompleted
+      contract.service = req.body.service
+      contract.email = req.body.email
+      contract.telno = req.body.telno
+      contract.serviceEmail = req.body.serviceEmail
 
-      if (req.body.password) {
-        user.password = bcrypt.hashSync(req.body.password, 8)
-      }
-
-      const updatedUser = await user.save()
+      const updatedContract = await contract.save()
       res.send({
-        _id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        isAdmin: updatedUser.isAdmin,
-        token: generateToken(updatedUser),
+        message: 'Contract Updated',
+        contract: updatedContract,
       })
+    } else {
+      res.status(404).send({ message: 'Contract Not Found' })
     }
   }),
 )
@@ -170,13 +209,15 @@ contractRouter.get(
 contractRouter.delete(
   '/:id',
   expressAsyncHandler(async (req, res) => {
-    console.log('in contractRouter.delete(')
-    const contract = await Contract.findOneAndDelete(
-      { id: req.params._id },
+    console.log('in contractRouter.delete()', req.params.id)
+    const contractid = req.params.id
+
+    const contract = await Contract.deleteOne(
+      { _id: contractid },
 
       function (err, contract) {
         if (!err) {
-          res.send({ message: req.params._id + ' removed' })
+          res.send({ message: contractid + ' removed' })
         } else {
           res.status(404).send({ message: 'Contract not found' })
         }

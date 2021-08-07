@@ -18,6 +18,7 @@ const contractSchema = new mongoose.Schema(
     email: { type: String, required: true },
     telno: { type: String },
     serviceEmail: { type: String, required: true },
+    image: { type: String },
   },
   {
     timestamps: true,

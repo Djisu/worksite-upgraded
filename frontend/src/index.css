@@ -85,6 +85,9 @@ button:hover {
 button.primary {
   background-color: #f0c040;
 }
+button.delete {
+  background-color: red;
+}
 button.block {
   width: 100%;
 }

@@ -13,34 +13,10 @@ import {
   CONTRACT_DELETE_REQUEST,
   CONTRACT_DELETE_SUCCESS,
   CONTRACT_DELETE_FAIL,
+  CONTRACT_UPDATE_REQUEST,
+  CONTRACT_UPDATE_SUCCESS,
+  CONTRACT_UPDATE_FAIL,
 } from '../constants/contractConstants'
-
-export const enterContractDetails = (contract) => async (
-  dispatch,
-  getState,
-) => {
-  dispatch({ type: CONTRACT_ENTRY_REQUEST, payload: contract })
-
-  try {
-    const {
-      userSignin: { userInfo },
-    } = getState()
-    const { data } = await Axios.post('/api/contracts', contract, {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    })
-    dispatch({ type: CONTRACT_ENTRY_SUCCESS, payload: data.contract })
-  } catch (error) {
-    dispatch({
-      type: CONTRACT_ENTRY_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    })
-  }
-}
 
 export const listContracts = () => async (dispatch) => {
   console.log('in listContracts')
@@ -67,6 +43,7 @@ export const listContracts = () => async (dispatch) => {
     })
   }
 }
+
 export const addToContract = (
   user,
   delay,
@@ -84,6 +61,7 @@ export const addToContract = (
   email,
   telno,
   serviceEmail,
+  imagex,
 ) => async (dispatch, getState) => {
   console.log('in addToContract')
 
@@ -113,6 +91,7 @@ export const addToContract = (
         email,
         telno,
         serviceEmail,
+        imagex,
       },
       {
         headers: {
@@ -135,15 +114,83 @@ export const addToContract = (
   }
 }
 
+export const editContract = (
+  user,
+  delay,
+  transDate,
+  completeDate,
+  description,
+  documents,
+  comments,
+  quantity,
+  unitPrice,
+  totalCost,
+  isPaid,
+  isCompleted,
+  service,
+  email,
+  telno,
+  serviceEmail,
+) => async (dispatch, getState) => {
+  console.log('in editContract')
+
+  dispatch({ type: CONTRACT_UPDATE_REQUEST })
+
+  try {
+    const {
+      userSignin: { userInfo },
+    } = getState()
+
+    const { data } = await Axios.put(
+      '/api/contracts',
+      {
+        user,
+        delay,
+        transDate,
+        completeDate,
+        description,
+        documents,
+        comments,
+        quantity,
+        unitPrice,
+        totalCost,
+        isPaid,
+        isCompleted,
+        service,
+        email,
+        telno,
+        serviceEmail,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      },
+    )
+    dispatch({ type: CONTRACT_UPDATE_SUCCESS, payload: data.contract }) //data.contract
+    localStorage.setItem('contractItems', JSON.stringify(data.contract))
+
+    console.log('data=', data)
+  } catch (error) {
+    dispatch({
+      type: CONTRACT_UPDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
 export const detailsContract = (email) => async (dispatch) => {
-  console.log(' in detailsContract email====', email)
+  //console.log(' in detailsContract email====', email)
 
   dispatch({ type: CONTRACT_DETAILS_REQUEST, payload: email })
 
   try {
     const { data } = await Axios.get(`/api/contracts/${email}`)
 
-    console.log(' in detailsContract  data=====', data)
+    //console.log(' in detailsContract  data=====', data)
 
     dispatch({
       type: CONTRACT_DETAILS_SUCCESS,
@@ -161,13 +208,17 @@ export const detailsContract = (email) => async (dispatch) => {
   }
 }
 
-export const deleteContract = (id) => async (dispatch, getState) => {
-  console.log('in deleteContract' + id)
+export const deleteContract = (id) => async (dispatch) => {
+  console.log('in deleteContract ' + id)
 
-  dispatch({ type: CONTRACT_DELETE_REQUEST, payload: id })
+  dispatch({ type: CONTRACT_DELETE_REQUEST })
 
   try {
+    console.log(`/api/contracts/${id}`)
+
     const { data } = await Axios.delete(`/api/contracts/${id}`)
+
+    console.log('data after delete=', data)
 
     dispatch({ type: CONTRACT_DELETE_SUCCESS, payload: data })
     localStorage.removeItem('contractItems', JSON.stringify(data))

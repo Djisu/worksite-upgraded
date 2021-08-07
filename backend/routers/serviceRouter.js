@@ -75,53 +75,28 @@ serviceRouter.post(
 )
 
 serviceRouter.put(
-  '/',
+  '/:id',
   isAuth,
   expressAsyncHandler(async (req, res) => {
-    console.log('in serviceRouter.put')
+    console.log('in serviceRouter.put req ooooooooooo', req.params._id)
+    const serviceId = req.params.id
 
-    if (!req.body) {
-      res.status(400).send({ message: 'Service is empty' })
-    }
-
-    const service = await Service.find({ email: req.params._id })
+    const service = await Service.findById(serviceId)
 
     if (service) {
-      ;(service.category = req.params.category),
-        (service.email = req.params.email),
-        (service.name = req.params.name),
-        (service.image = req.params.image),
-        (service.unitPrice = req.params.unitPrice),
-        (service.rating = req.params.rating),
-        (service.numReviews = req.params.numReviews),
-        (service.description = req.params.description),
-        (service.telno = req.params.telno),
-        (service.delay = req.params.delay),
-        (service.transDate = req.params.transDate),
-        (service.expireDate = req.params.expireDate),
-        (service.serviceFees = req.params.serviceFees)
+      service.name = req.body.name
+      service.image = req.body.image
+      service.unitPrice = req.body.unitPrice
+      service.description = req.body.description
+      service.delay = req.body.delay
 
-      //await Service.remove({})
       const updatedService = await service.save()
 
       console.log('updatedService==', updatedService)
 
-      res.status(201).send({
-        _id: updatedService._id,
-        category: updatedService.category,
-        email: updatedService.email,
-        name: updatedService.name,
-        image: updatedService.image,
-        unitPrice: updatedService.unitPrice,
-        rating: updatedService.rating,
-        numReviews: updatedService.numReviews,
-        description: updatedService.description,
-        telno: updatedService.telno,
-        delay: updatedService.delay,
-        transDate: updatedService.transDate,
-        expireDate: updatedService.expireDate,
-        serviceFees: updatedService.serviceFees,
-      })
+      res.send({ message: 'Service Updated', service: updatedService })
+    } else {
+      res.status(404).send({ message: 'Service Not Found' })
     }
   }),
 )
@@ -129,12 +104,12 @@ serviceRouter.put(
 serviceRouter.get(
   '/:email',
   expressAsyncHandler(async (req, res) => {
-    console.log('in serviceRouter.get, req.body.email== ', req.params.email)
+    // console.log('in serviceRouter.get, req.body.email== ', req.params.email)
 
     //const user = await User.findOne({ email: req.body.email })
     const service = await Service.find({ email: req.params.email })
 
-    console.log('THESE ARE THE serviceS==', service)
+    //console.log('THESE ARE THE serviceS==', service)
 
     if (service) {
       res.send(service)
@@ -147,13 +122,43 @@ serviceRouter.get(
 serviceRouter.delete(
   '/:id',
   expressAsyncHandler(async (req, res) => {
-    console.log('in serviceRouter.delete(')
+    console.log('in serviceRouter.delete()')
     const service = await Service.findOneAndDelete(
       { id: req.params._id },
 
       function (err, service) {
         if (!err) {
           res.send({ message: req.params._id + ' removed' })
+        } else {
+          res.status(404).send({ message: 'Service not found' })
+        }
+      },
+    )
+  }),
+)
+/* userRouter.get(
+  '/:id',
+  expressAsyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
+
+    if (user) {
+      res.send(user)
+    } else {
+      res.status(404).send({ message: 'User Not Found' })
+    }
+  }),
+) */
+serviceRouter.get(
+  '/:id',
+  expressAsyncHandler(async (req, res) => {
+    console.log('in serviceRouter.get(')
+
+    const service = await Service.findById(
+      { id: req.params._id },
+
+      function (err, service) {
+        if (!err) {
+          res.send(service)
         } else {
           res.status(404).send({ message: 'Service not found' })
         }
