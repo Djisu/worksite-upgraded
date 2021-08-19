@@ -37,7 +37,6 @@ contractRouter.post(
 
       const contract = new Contract({
         user: req.body.user,
-        delay: req.body.delay,
         transDate: req.body.transDate,
         completeDate: req.body.completeDate,
         description: req.body.description,
@@ -97,7 +96,6 @@ contractRouter.post(
       res.status(201).send({
         _id: createdContract._id,
         user: createdContract.user,
-        delay: createdContract.delay,
         transDate: createdContract.transDate,
         completeDate: createdContract.completeDate,
         description: createdContract.description,
@@ -128,7 +126,6 @@ contractRouter.put(
 
     if (contract) {
       contract.user = req.body.user
-      contract.delay = req.body.delay
       contract.transDate = req.body.transDate
       contract.completeDate = req.body.completeDate
       contract.description = req.body.description

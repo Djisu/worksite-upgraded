@@ -6,6 +6,8 @@ import { addToContract } from '../actions/contractActions'
 import LoadingBox from '../components/LoadingBox'
 import MessageBox from '../components/MessageBox'
 import { storage } from '../firebase'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 export default function ContractScreen(props) {
   console.log('props.location.state=', props.location.state)
@@ -51,6 +53,7 @@ export default function ContractScreen(props) {
   let [serviceEmail, setServiceEmail] = useState(props.location.state.email)
   let [email, setEmail] = useState(userInfo.email)
   let [telno, setTelno] = useState(userInfo.telno)
+  // let [endDate, setEndDate] = useState(new Date())
 
   let unitPrice = 0
   unitPrice = unitPrice ? props.location.state.unitPrice : 0
@@ -61,7 +64,7 @@ export default function ContractScreen(props) {
   let [totalCost, setTotalCost] = useState(0)
   let [isPaid, setIsPaid] = useState(false)
   let [isCompleted, setIsCompleted] = useState(false)
-  let [service, setService] = useState(props.location.state.name) 
+  let [service, setService] = useState(props.location.state.name)
   let [imagex, setImagex] = useState(props.location.state.image)
 
   const [image, setImage] = useState(null)
@@ -136,19 +139,19 @@ export default function ContractScreen(props) {
     if (state.button === 2) {
       console.log('in state.button === 2 ')
       console.log('description=', description)
-      console.log('delay again is===', delay)
+      //console.log('delay again is===', delay)
 
-      let myDate = new Date()
+      /*  let myDate = new Date()
       let newDate = new Date(myDate.setDate(myDate.getDate() + delay))
 
-      console.log('newDate=', newDate)
+      console.log('newDate=', newDate) */
 
       const varTotalCost = quantity * props.location.state.unitPrice
 
       console.log('varTotalCost======', varTotalCost)
 
       setTransDate(new Date())
-      setCompleteDate(newDate)
+      // setCompleteDate(newDate)
       setComments('No comments for now')
       setIsPaid(false)
       setIsCompleted(false)
@@ -160,9 +163,7 @@ export default function ContractScreen(props) {
 
       console.log('totalCost======', totalCost)
 
-      if (!delay) {
-        alert('Enter the expected days')
-      } else if (!description) {
+      if (!description) {
         alert('Enter the contract description')
       } else if (!quantity) {
         alert('Enter the quantity expected')
@@ -171,11 +172,13 @@ export default function ContractScreen(props) {
       } else if (!totalCost) {
         alert('Total cost cannot be empty')
       }
-
+      if (!completeDate) {
+        alert('Completion date is required')
+        return
+      }
       dispatch(
         addToContract(
           user,
-          delay,
           transDate,
           completeDate,
           description,
@@ -226,19 +229,15 @@ export default function ContractScreen(props) {
               alt={props.location.state.name}
             />
           </div>
+          <br />
           Service selected: {props.location.state.name}
           <div>
             <label>
-              Give the number of days to complete contract
-              <br />
-              <input
-                type="number"
-                id="delay"
-                placeholder="Number of days"
-                requires
-                onBlur={(e) => console.log('onBlur delay=', e.target.value)}
-                onChange={(e) => setDelay(e.target.value)}
-              ></input>
+              When will Contract End?
+              <DatePicker
+                selected={completeDate}
+                onChange={(date) => setCompleteDate(date)}
+              />
             </label>
           </div>
           <br />
@@ -259,7 +258,8 @@ export default function ContractScreen(props) {
           <br />
           <label style={{ color: 'blue' }}>
             {' '}
-            Unit Price: {props.location.state.unitPrice}
+            Unit Price: {props.location.state.unitPrice}{' '}
+            {props.location.state.units}
           </label>
           <div>
             <label>

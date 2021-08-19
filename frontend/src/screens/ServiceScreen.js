@@ -56,7 +56,7 @@ export default function ServiceScreen(props) {
   const [unitPrice, setUnitPrice] = useState(0)
   const [description, setDescription] = useState('')
   const [telno, setTelno] = useState('') //
-  let [delay, setDelay] = useState(0)
+  //let [delay, setDelay] = useState(0)
   let [transDate, setTransDate] = useState(new Date())
   //let [expireDate, setExpireDate] = useState(new Date())
 
@@ -357,16 +357,7 @@ export default function ServiceScreen(props) {
                       </option>
                     ))}
                   </select>
-                  {/*  <select
-                    onChange={(e) => handleCategoryChange(e)}
-                    className="browser-default custom-select"
-                  >
-                    {Add.map((category, key) => (
-                      <option key={key} value={key}>
-                        {category}
-                      </option>
-                    ))}
-                  </select> */}
+                
                 </label>
               </div>
               <br />
@@ -378,7 +369,6 @@ export default function ServiceScreen(props) {
                     onChange={(date) => setEndDate(date)}
                   />
                 </label>
-                <br />
               </div>
               <br />
               <br />

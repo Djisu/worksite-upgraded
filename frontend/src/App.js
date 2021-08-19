@@ -26,7 +26,7 @@ function App() {
   const contractDetails = useSelector((state) => state.contractDetails)
   const { contract } = contractDetails
 
-  console.log('length of contract=', Object.keys(contract).length)
+  //console.log('length of contract=', Object.keys(contract).length)
 
   const serviceDetails = useSelector((state) => state.serviceDetails)
   const { loading, error, service } = serviceDetails || ''
@@ -48,9 +48,9 @@ function App() {
             </Link>
           </div>
           <div>
-            {Object.keys(contract).length > 0 && (
+           {/*  {Object.keys(contract).length > 0 && (
               <span className="badge">{Object.keys(contract).length}</span>
-            )}
+            )} */}
             {userInfo ? (
               <div className="dropdown">
                 <Link to="#">
@@ -133,7 +133,7 @@ function App() {
           <Route path="/contractList" component={ContractListScreen}></Route>
           <Route path="/rateService" component={RateServiceScreen}></Route>
           <Route path="/editService" component={EditServiceScreen}></Route>
-          <Route path="/editContract" component={EditContractScreen}></Route>       
+          <Route path="/editContract" component={EditContractScreen}></Route>
 
           <PrivateRoute
             path="/profile"

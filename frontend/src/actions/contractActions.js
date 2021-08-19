@@ -44,10 +44,8 @@ export const listContracts = () => async (dispatch) => {
   }
 }
 
-
 export const addToContract = (
   user,
-  delay,
   transDate,
   completeDate,
   description,
@@ -77,7 +75,6 @@ export const addToContract = (
       '/api/contracts',
       {
         user,
-        delay,
         transDate,
         completeDate,
         description,
@@ -117,7 +114,6 @@ export const addToContract = (
 
 export const editContract = (
   user,
-  delay,
   transDate,
   completeDate,
   description,
@@ -146,7 +142,6 @@ export const editContract = (
       '/api/contracts',
       {
         user,
-        delay,
         transDate,
         completeDate,
         description,

@@ -36,7 +36,12 @@ export default function Service(props) {
 
     console.log('about to /rateService service===========', service)
 
-    history.push({ pathname: '/rateService', state: service })
+    if (!userInfo) {
+      history.push('/signin')
+    } else {
+      console.log('service =', service)
+      history.push({ pathname: '/rateService', state: service })
+    }
   }
 
   //console.log('history=', history)  //'/rateService', service

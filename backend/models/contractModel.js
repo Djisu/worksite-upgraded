@@ -3,7 +3,6 @@ import mongoose from 'mongoose'
 const contractSchema = new mongoose.Schema(
   {
     user: { type: String, required: true },
-    delay: { type: Number, required: true },
     transDate: { type: Date, required: true },
     completeDate: { type: Date, required: true },
     description: { type: String, required: true },
@@ -27,4 +26,3 @@ const contractSchema = new mongoose.Schema(
 
 const Contract = mongoose.model('Contract', contractSchema)
 export default Contract
-
