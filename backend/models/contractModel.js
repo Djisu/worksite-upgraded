@@ -28,4 +28,3 @@ const contractSchema = new mongoose.Schema(
 const Contract = mongoose.model('Contract', contractSchema)
 export default Contract
 
-//user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

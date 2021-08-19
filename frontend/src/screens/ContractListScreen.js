@@ -1,44 +1,26 @@
 import React, { useEffect } from 'react'
-//import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { detailsContract } from '../actions/contractActions'
-//import ServiceList from '../components/ServiceList'
 import LoadingBox from '../components/LoadingBox'
 import MessageBox from '../components/MessageBox'
 import { deleteContract } from '../actions/contractActions'
 
 function ContractListScreen(props) {
   const dispatch = useDispatch()
-
-  //console.log('props.location.state._id')
-
   const userSignin = useSelector((state) => state.userSignin)
   const { userInfo } = userSignin
-
-  //console.log('userInfo.email:', userInfo.email || '')
-
   const contractDetails = useSelector((state) => state.contractDetails)
-
-  //console.log('contractDetails========================', contractDetails)
-
   const { loading, error, contract } = contractDetails
 
-  // console.log('loading, error==', loading, error)  //Object.keys(service)
-  // console.log('contracts:XXXXXX', contract)
-
   const removeFromContractHandler = (_id) => {
-    //delete action
-    console.log('in  removeFromContractHandler = (contract._id)', _id)
-
     //Confirm deletion
     if (window.confirm('Do you want to delete contract?') == false) {
       return
     }
 
     dispatch(deleteContract(_id))
-
     dispatch(detailsContract(userInfo.email))
     props.history.push('/')
   }
@@ -48,8 +30,6 @@ function ContractListScreen(props) {
   }
 
   useEffect(() => {
-    //console.log('in dispatch(detailsContract(userInfo.email))')
-
     dispatch(detailsContract(userInfo.email))
   }, [dispatch, userInfo.email])
 

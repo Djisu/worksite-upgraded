@@ -3,10 +3,6 @@ import expressAsyncHandler from 'express-async-handler'
 import data from '../data.js'
 import Contract from '../models/contractModel.js'
 import { isAuth } from '../utils.js'
-//var TMClient = require('textmagic-rest-client');
-//import TMClient from 'textmagic-rest-client'
-//var nodemailer = require('nodemailer')
-
 import { keys } from '../config/keys.js'
 import nodemailer from 'nodemailer'
 const { user, pass } = keys
@@ -16,8 +12,6 @@ let contractRouter = express.Router()
 contractRouter.get(
   '/',
   expressAsyncHandler(async (req, res) => {
-    //console.log('in contractRouter.get')
-
     const contracts = await Contract.find({})
     res.send(contracts)
   }),
@@ -40,8 +34,6 @@ contractRouter.post(
       res.status(400).send({ message: 'Contract is empty' })
     } else {
       console.log('in contractRouter.post')
-
-      //const varTelno = req.body.telno
 
       const contract = new Contract({
         user: req.body.user,
@@ -100,7 +92,6 @@ contractRouter.post(
           console.log('Email sent: ' + info.response)
         }
       })
-
       //End of Email
 
       res.status(201).send({
@@ -125,35 +116,8 @@ contractRouter.post(
     }
   }),
 )
-/* serviceRouter.put(
-  '/:id',
-  isAuth,
-  expressAsyncHandler(async (req, res) => {
-    console.log('in serviceRouter.put req ooooooooooo', req.params._id)
-    const serviceId = req.params.id
-
-    const service = await Service.findById(serviceId)
-
-    if (service) {
-      service.name = req.body.name
-      service.image = req.body.image
-      service.unitPrice = req.body.unitPrice
-      service.description = req.body.description
-      service.delay = req.body.delay
-
-      const updatedService = await service.save()
-
-      console.log('updatedService==', updatedService)
-
-      res.send({ message: 'Service Updated', service: updatedService })
-    } else {
-      res.status(404).send({ message: 'Service Not Found' })
-    }
-  }),
-) */
 
 contractRouter.put(
-  // WORK ON THIS. IT IS NOT COMPLETE!!!!
   '/:id',
   isAuth,
   expressAsyncHandler(async (req, res) => {
@@ -194,11 +158,9 @@ contractRouter.put(
 contractRouter.get(
   '/:email',
   expressAsyncHandler(async (req, res) => {
-    // console.log('in contractRouter.get email==', req.params.email)
     const contract = await Contract.find({ email: req.params.email })
 
     if (contract) {
-      //console.log('contract==', contract)
       res.send(contract)
     } else {
       res.status(404).send({ message: 'Contract Not Found' })

@@ -1,13 +1,10 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
 import { Link } from 'react-router-dom'
 import { addToContract } from '../actions/contractActions'
-
 import LoadingBox from '../components/LoadingBox'
 import MessageBox from '../components/MessageBox'
-
 import { storage } from '../firebase'
 
 export default function ContractScreen(props) {
@@ -64,27 +61,8 @@ export default function ContractScreen(props) {
   let [totalCost, setTotalCost] = useState(0)
   let [isPaid, setIsPaid] = useState(false)
   let [isCompleted, setIsCompleted] = useState(false)
-  let [service, setService] = useState(props.location.state.name) //props.location.state._id
+  let [service, setService] = useState(props.location.state.name) 
   let [imagex, setImagex] = useState(props.location.state.image)
-
-  //let user = ''
-  /* user = user ? userInfo._id : ''
- setUser(user) */
-
-  //let serviceEmail = ''
-  /*  serviceEmail = serviceEmail ? props.location.state.email : ''
-  setServiceEmail(serviceEmail) */
-
-  // let email = ''
-  /*  email = email ? userInfo.email : ''
-  setEmail(email) */
-
-  //let telno = ''
-  /*  telno = telno ? userInfo.telno : ''
-  setTelno(telno) */
-
-  /* let serviceName = ''
-  serviceName = serviceName ? props.location.state.name : '' */
 
   const [image, setImage] = useState(null)
   const [url, setUrl] = useState(null)
@@ -157,12 +135,7 @@ export default function ContractScreen(props) {
 
     if (state.button === 2) {
       console.log('in state.button === 2 ')
-
-      // setService(props.location.state.name)
-
       console.log('description=', description)
-
-      //delay = parseInt(delay)
       console.log('delay again is===', delay)
 
       let myDate = new Date()
@@ -179,8 +152,6 @@ export default function ContractScreen(props) {
       setComments('No comments for now')
       setIsPaid(false)
       setIsCompleted(false)
-      //setService(props.location.state.name) //props.location.state._id
-      //setQuantity(quantity)
       console.log('service name==', service)
 
       setTotalCost(quantity * props.location.state.unitPrice)
@@ -223,13 +194,6 @@ export default function ContractScreen(props) {
         ),
       )
       props.history.push('/')
-      //Initialize states here
-      /*  setDelay(0)
-      setDescription('')
-      setDocuments([])
-      setComments('')
-      setQuantity(0)
-      setTotalCost(0) */
     }
   }
 

@@ -6,14 +6,8 @@ import {
   contractDetailsReducer,
   contractListReducer,
   deleteContractReducer,
-  enterContractDetailsReducer,
 } from './reducers/contractReducers'
-// import {
-//   orderCreateReducer,
-//   orderDetailsReducer,
-//   orderMineListReducer,
-//   orderPayReducer,
-// } from './reducers/orderReducers'
+
 import {
   serviceDetailsReducer,
   serviceListReducer,
@@ -48,22 +42,9 @@ const initialState = {
       : {},
   },
   contract: {
-    /* contractItems: localStorage.getItem('contractItems')
-      ? JSON.parse(localStorage.getItem('contractItems'))
-      : {}, */
     contractDetails: localStorage.getItem('contractDetails')
       ? JSON.parse(localStorage.getItem('contractDetails'))
       : {},
-  },
-
-  cart: {
-    cartItems: localStorage.getItem('cartItems')
-      ? JSON.parse(localStorage.getItem('cartItems'))
-      : [],
-    shippingAddress: localStorage.getItem('shippingAddress')
-      ? JSON.parse(localStorage.getItem('shippingAddress'))
-      : {},
-    paymentMethod: 'PayPal',
   },
 }
 
@@ -80,10 +61,8 @@ const reducer = combineReducers({
 
   contractList: contractListReducer,
   contractDetails: contractDetailsReducer,
-  enterContractDetails: enterContractDetailsReducer,
   addToContract: addToContractReducer,
   deleteContract: deleteContractReducer,
-  contract: contractListReducer,
 
   cart: cartReducer,
   userSignin: userSigninReducer,

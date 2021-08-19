@@ -15,13 +15,15 @@ function ServiceListScreen(props) {
 
   const history = useHistory()
 
+  console.log('in ServiceListScreen(props) ')
+
   const userSignin = useSelector((state) => state.userSignin)
   const { userInfo } = userSignin || ''
 
   const serviceDetails = useSelector((state) => state.serviceDetails)
   const { loading, error, service } = serviceDetails || ''
 
-  //console.log('service=', service)
+  console.log('service=========', service)
 
   const removeFromServiceHandler = (id) => {
     //delete action
@@ -40,8 +42,6 @@ function ServiceListScreen(props) {
       image,
     )
 
-    // dispatch(getService(id))
-
     const newService = { id, name, description, unitPrice, image }
     history.push({ pathname: '/editService', state: newService })
   }
@@ -53,7 +53,7 @@ function ServiceListScreen(props) {
   }, [dispatch, userInfo.email])
 
   useEffect(() => {
-    //console.log('in dispatch(detailsService(userInfo.email))')
+    console.log('userInfo.email==', userInfo.email)
 
     if (!userInfo.email) {
       return
@@ -93,6 +93,7 @@ function ServiceListScreen(props) {
                   <br />
                   <span>{item.unitPrice}</span>
                   <br />
+                  <span>{item.expireDate}</span>
                   <br />
                   <div>
                     <button

@@ -3,9 +3,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-
 import { createReview, detailsService } from '../actions/serviceActions'
-
 import Rating from '../components/Rating'
 import MessageBox from '../components/MessageBox'
 import LoadingBox from '../components/LoadingBox'
@@ -14,23 +12,7 @@ import { SERVICE_REVIEW_CREATE_RESET } from '../constants/serviceConstants'
 function RateServiceScreen(props) {
   const dispatch = useDispatch()
   const location = useLocation()
-
-  console.log('location.state==', location.state)
-
-  //  const { service } = props
-
   const serviceId = location.state._id
-
-  //console.log(' props.location.state=====', props.location.state._id)
-
-  //
-  /* console.log('====================================')
-  console.log('serviceId=====', serviceId)
-  console.log('====================================') */
-
-  /*  const serviceDetails = useSelector((state) => state.serviceDetails)
-  const { loading, error, service } = serviceDetails */
-
   const service = location.state
   console.log('service=', service)
 
@@ -60,9 +42,7 @@ function RateServiceScreen(props) {
       setComment('')
       dispatch({ type: SERVICE_REVIEW_CREATE_RESET })
     }
-
-    // dispatch(detailsService(serviceId))
-  }, [dispatch, successReviewCreate]) // serviceId,
+  }, [dispatch, successReviewCreate]) 
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -79,13 +59,8 @@ function RateServiceScreen(props) {
   return (
     <div>
       <div>
-         <Link to="/">Back to results</Link>
-        {/*  {loading && <LoadingBox></LoadingBox>}
-        {error && <MessageBox variant="danger">{error}</MessageBox>} */}
+         <Link to="/">Back to results</Link>     
         <h2 id="reviews">Reviews</h2>
-        {/* {service.reviews.length === 0 && (
-          <MessageBox>There is no review</MessageBox>
-        )} */}
         <ul>
           {service.reviews.map((review) => (
             <li key={review._id}>
@@ -133,12 +108,6 @@ function RateServiceScreen(props) {
                   </div>
                 </div>
                 <div>
-                  {/* {loadingReviewCreate && <LoadingBox></LoadingBox>}
-                  {errorReviewCreate && (
-                    <MessageBox variant="danger">
-                      {errorReviewCreate}
-                    </MessageBox>
-                  )} */}
                 </div>
               </form>
             ) : (

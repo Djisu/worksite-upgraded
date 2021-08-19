@@ -13,9 +13,6 @@ export default function ServiceScreen(props) {
   const category = props.location.state.category
   const picture = props.location.state.image
 
-  console.log('picture=', picture)
-
-  //const [category, setCategory] = useState('') //
   const [name, setName] = useState('')
   let [image, setImage] = useState([])
   const [unitPrice, setUnitPrice] = useState(0)
@@ -26,8 +23,6 @@ export default function ServiceScreen(props) {
 
   const serviceDetails = useSelector((state) => state.serviceDetails)
   const { loading, error, service } = serviceDetails
-
-  //console.log('props.location.state is=oooooooooooo', props.location.state)
 
   const serviceUpdate = useSelector((state) => state.serviceUpdate)
   const {
@@ -50,14 +45,13 @@ export default function ServiceScreen(props) {
       dispatch({ type: SERVICE_UPDATE_RESET })
       dispatch(detailsService(serviceId))
     } else {
-      //setCategory(props.location.state.category)
       setName(service.name)
       setImage(service.image)
       setUnitPrice(service.unitPrice)
       setDescription(service.description)
       setDelay(service.delay)
     }
-  }, [dispatch, successUpdate, props.history]) // [service, dispatch, serviceId, successUpdate, props.history])
+  }, [dispatch, successUpdate, props.history]) 
 
   const rating = 0
   const numReviews = 0
@@ -103,12 +97,11 @@ export default function ServiceScreen(props) {
             })
         },
       )
-      //return //image
     }
 
     if (flag.button === 2) {
       console.log('in state.button === 2 submit form')
-      // setEmail(userInfo.email)
+    
       if (delay === 0) {
         console.log('Delay not found!!')
         return
@@ -122,7 +115,6 @@ export default function ServiceScreen(props) {
         let newDate = new Date(myDate.setDate(myDate.getDate() + delay))
 
         setTransDate(new Date())
-        //setExpireDate(newDate)
       }
 
       if (
@@ -172,7 +164,6 @@ export default function ServiceScreen(props) {
           <div>
             <h1>Edit Old Service</h1>
           </div>
-          {/* {!userInfo && <h4>Add email address to your profile</h4>} */}
           {loadingUpdate && <LoadingBox></LoadingBox>}
           {errorUpdate && <MessageBox variant="danger">{error}</MessageBox>}
           {loading ? (
@@ -196,8 +187,7 @@ export default function ServiceScreen(props) {
                   <input
                     type="text"
                     id="name"
-                    placeholder="Name"
-                    // value={props.location.state.name}
+                    placeholder="Name"                
                     onChange={(e) => setName(e.target.value)}
                   ></input>
                 </label>
@@ -210,8 +200,7 @@ export default function ServiceScreen(props) {
                   <textarea
                     type="text"
                     id="description"
-                    placeholder="Description"
-                    // value={props.location.state.description}
+                    placeholder="Description"                   
                     onChange={(e) => setDescription(e.target.value)}
                   ></textarea>
                 </label>
@@ -224,8 +213,7 @@ export default function ServiceScreen(props) {
                   <input
                     type="float"
                     id="unitPrice"
-                    placeholder="Enter the unit price for your service"
-                    // value={props.location.state.unitPrice}
+                    placeholder="Enter the unit price for your service"                 
                     onChange={(e) => setUnitPrice(e.target.value)}
                   ></input>
                   per contract/day/hour: state in description
@@ -245,9 +233,7 @@ export default function ServiceScreen(props) {
                 </label>
               </div>
               <br />
-              <br />
-              {/*  Owner's Email: {service.email}
-              <br /> */}
+              <br />        
               <br />
               <br />
               <br />

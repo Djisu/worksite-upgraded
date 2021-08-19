@@ -3,15 +3,16 @@ import expressAsyncHandler from 'express-async-handler'
 import data from '../data.js'
 import Service from '../models/serviceModel.js'
 import { isAuth } from '../utils.js'
+import moment from 'moment'
 
 const serviceRouter = express.Router()
 
 serviceRouter.get(
   '/',
   expressAsyncHandler(async (req, res) => {
-    // console.log('in get')
-    const services = await Service.find({})
-    // console.log('services============', services)
+    const services = await Service.find({
+      endDate: { $gt: new Date() },
+    })
     res.send(services)
   }),
 )
@@ -19,7 +20,6 @@ serviceRouter.get(
 serviceRouter.get(
   '/seed',
   expressAsyncHandler(async (req, res) => {
-    //console.log('data==', data)
     await Service.remove({})
     const createdServices = await Service.insertMany(data.services)
     res.send({ createdServices })
@@ -45,10 +45,10 @@ serviceRouter.post(
         numReviews: req.body.numReviews,
         description: req.body.description,
         telno: req.body.telno,
-        delay: req.body.delay,
         transDate: req.body.transDate,
-        expireDate: req.body.expireDate,
+        endDate: req.body.endDate,
         serviceFees: req.body.serviceFees,
+        units: req.body.units,
       })
       //await Service.remove({})
       const createdServices = await service.save()
@@ -65,10 +65,10 @@ serviceRouter.post(
         numReviews: createdServices.numReviews,
         description: createdServices.description,
         telno: createdServices.telno,
-        delay: createdServices.delay,
         transDate: createdServices.transDate,
-        expireDate: createdServices.expireDate,
+        endDate: createdServices.endDate,
         serviceFees: createdServices.serviceFees,
+        units: createdServices.units,
       })
     }
   }),
@@ -85,10 +85,10 @@ serviceRouter.put(
 
     if (service) {
       service.name = req.body.name
-      service.image = req.body.image
+      service.image = req.body.images
       service.unitPrice = req.body.unitPrice
       service.description = req.body.description
-      service.delay = req.body.delay
+      service.endDate = req.body.endDate
 
       const updatedService = await service.save()
 
@@ -104,12 +104,18 @@ serviceRouter.put(
 serviceRouter.get(
   '/:email',
   expressAsyncHandler(async (req, res) => {
-    // console.log('in serviceRouter.get, req.body.email== ', req.params.email)
+    console.log('serviceRouter.get')
 
-    //const user = await User.findOne({ email: req.body.email })
-    const service = await Service.find({ email: req.params.email })
+    const today = moment().startOf('day')
 
-    //console.log('THESE ARE THE serviceS==', service)
+    console.log('const service = await Service.find')
+
+    const service = await Service.find({
+      email: req.params.email,
+      endDate: { $gt: new Date() },
+    })
+
+    console.log('serviceRouter.get service ==', service) //  endDate: { $gte: today.toDate() },,
 
     if (service) {
       res.send(service)
@@ -136,18 +142,7 @@ serviceRouter.delete(
     )
   }),
 )
-/* userRouter.get(
-  '/:id',
-  expressAsyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id)
 
-    if (user) {
-      res.send(user)
-    } else {
-      res.status(404).send({ message: 'User Not Found' })
-    }
-  }),
-) */
 serviceRouter.get(
   '/:id',
   expressAsyncHandler(async (req, res) => {

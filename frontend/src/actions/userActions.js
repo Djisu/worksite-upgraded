@@ -56,7 +56,7 @@ export const register = (
 export const signin = (email, password) => async (dispatch) => {
   dispatch({ type: USER_SIGNIN_REQUEST, payload: { email, password } })
 
-  console.log('in signin')
+  //console.log('in signin')
 
   try {
     const { data } = await Axios.post('/api/users/signin', { email, password })

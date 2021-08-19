@@ -1,50 +1,37 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { BrowserRouter, Route } from 'react-router-dom'
 
 import HomeScreen from './screens/HomeScreen'
 import ServiceScreen from './screens/ServiceScreen'
-
 import ServiceListScreen from './screens/ServiceListScreen'
-/* import ShippingAddressScreen from './screens/ShippingAddressScreen'
-import PaymentMethodScreen from './screens/PaymentMethodScreen' */
-
-//import CartScreen from './screens/CartScreen'
 import { useDispatch, useSelector } from 'react-redux'
 import SigninScreen from './screens/SigninScreen'
 import RegisterScreen from './screens/RegisterScreen'
 import ContractScreen from './screens/ContractScreen'
 import { signout } from './actions/userActions'
-/* import PlaceOrderScreen from './screens/PlaceOrderScreen'
-import OrderScreen from './screens/OrderScreen'
-import OrderHistoryScreen from './screens/OrderHistoryScreen' */
 import ProfileScreen from './screens/ProfileScreen'
 import PrivateRoute from './components/PrivateRoute'
 import ContractListScreen from './screens/ContractListScreen'
 import RateServiceScreen from './screens/RateServiceScreen'
 import EditServiceScreen from './screens/EditServiceScreen'
 import EditContractScreen from './screens/EditContractScreen'
-// import { detailsContract } from './actions/contractActions'
-//import { detailsService } from './actions/serviceActions'
+import { detailsContract } from './actions/contractActions'
+import { useState } from 'react'
 
 function App() {
   const userSignin = useSelector((state) => state.userSignin)
-  const { userInfo } = userSignin
+  const { userInfo } = userSignin || ''
 
-  const contract = useSelector((state) => state.contract)
-  const { contractDetails } = contract
+  const contractDetails = useSelector((state) => state.contractDetails)
+  const { contract } = contractDetails
+
+  console.log('length of contract=', Object.keys(contract).length)
 
   const serviceDetails = useSelector((state) => state.serviceDetails)
   const { loading, error, service } = serviceDetails || ''
 
   const dispatch = useDispatch()
-
-  /* useEffect(() => {
-    if (contractDetails) {
-      console.log('in useEffect')
-      dispatch(detailsContract(userInfo.email))
-    }
-  }, [dispatch, contractDetails, userInfo.email]) */
 
   const signoutHandler = () => {
     console.log('About to signout')
@@ -61,11 +48,10 @@ function App() {
             </Link>
           </div>
           <div>
-            {contractDetails.length > 0 && (
-              <span className="badge">{contractDetails.length}</span>
+            {Object.keys(contract).length > 0 && (
+              <span className="badge">{Object.keys(contract).length}</span>
             )}
             {userInfo ? (
-              // {userInfo.employmentStatus !== "Employer"
               <div className="dropdown">
                 <Link to="#">
                   {userInfo.name} <i className="fa fa-caret-down"></i>
@@ -100,12 +86,6 @@ function App() {
                           <li>
                             <Link to="/contractlist">List your Contracts</Link>
                           </li>
-                          {/*  <li>
-                            <Link to="/editService">Edit your Service</Link>
-                          </li>
-                          <li>
-                            <Link to="/editContract">Edit your Contract</Link>
-                          </li> */}
                         </div>
                       )}
 
@@ -121,7 +101,6 @@ function App() {
                     </ul>
                   </div>
                 )}
-                {/* </ul> */}
               </div>
             ) : (
               <Link to="/signin">Sign In</Link>
@@ -136,12 +115,6 @@ function App() {
                   <li>
                     <Link to="/dashboard">Dashboard</Link>
                   </li>
-                  {/* <li>
-                    <Link to="/servicelist">Services</Link>
-                  </li> */}
-                  {/* <li>
-                    <Link to="/contractlist">Contracts</Link>
-                  </li> */}
                   <li>
                     <Link to="/userlist">Users</Link>
                   </li>
@@ -151,24 +124,16 @@ function App() {
           </div>
         </header>
         <main>
-          {/* <Route path="/cart/:id?" component={CartScreen}></Route> */}
-          {/* <Route path="/service/:id" component={ServiceScreen}></Route> */}
           <Route path="/" component={HomeScreen} exact></Route>
           <Route path="/service" component={ServiceScreen}></Route>
           <Route path="/serviceList" component={ServiceListScreen}></Route>
-
           <Route path="/signin" component={SigninScreen}></Route>
           <Route path="/register" component={RegisterScreen}></Route>
           <Route path="/contract" component={ContractScreen}></Route>
           <Route path="/contractList" component={ContractListScreen}></Route>
           <Route path="/rateService" component={RateServiceScreen}></Route>
           <Route path="/editService" component={EditServiceScreen}></Route>
-          <Route path="/editContract" component={EditContractScreen}></Route>
-          {/*  <Route path="/shipping" component={ShippingAddressScreen}></Route>
-          <Route path="/payment" component={PaymentMethodScreen}></Route>
-          <Route path="/placeorder" component={PlaceOrderScreen}></Route>
-          <Route path="/order/:id" component={OrderScreen}></Route>
-          <Route path="/orderhistory" component={OrderHistoryScreen}></Route> */}
+          <Route path="/editContract" component={EditContractScreen}></Route>       
 
           <PrivateRoute
             path="/profile"

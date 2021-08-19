@@ -5,7 +5,6 @@ import { register } from '../actions/userActions.js'
 import LoadingBox from '../components/LoadingBox.js'
 import MessageBox from '../components/MessageBox.js'
 import countryList from '../countryList'
-//import Select from "react-dropdown-select";
 
 function RegisterScreen(props) {
   const [name, setName] = useState('')
@@ -55,13 +54,7 @@ function RegisterScreen(props) {
       )
     }
   }
-  /*  name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    isAdmin: { type: Boolean, default: false, required: true },
-    address: { type: String, required: true },
-    telno: { type: String, required: true },
-    employmentStatus: {type: String, required: true}, */
+
   useEffect(() => {
     if (userInfo) {
       props.history.push(redirect)
@@ -158,7 +151,6 @@ function RegisterScreen(props) {
           </select>
         </div>
 
-        {/* Select country from country list  */}
         <div>
           <label htmlFor="country">Select your country</label>
 

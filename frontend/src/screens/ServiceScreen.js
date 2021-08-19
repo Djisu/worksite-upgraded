@@ -5,6 +5,8 @@ import { addToService, listServices } from '../actions/serviceActions'
 import LoadingBox from '../components/LoadingBox'
 import MessageBox from '../components/MessageBox'
 import { storage } from '../firebase'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 export default function ServiceScreen(props) {
   const dispatch = useDispatch()
@@ -36,39 +38,34 @@ export default function ServiceScreen(props) {
     'Cleaner',
   ])
 
-  //setCategory(['Printer', 'carpenter', 'mason', 'electrician', 'plumber'])
-
   let Add = addrtype.map((item) => item)
 
   const handleCategoryChange = (e) => {
     setCategory(addrtype[e.target.value])
     //setAddrtype('') //YOU CAN STILL DISABLE THIS LINE
   }
+  const handleUnitChange = (e) => {
+    setUnits(e.target.value)
+    //console.log('e.target.value==', e.target.value)
+  }
+
   const [category, setCategory] = useState('Printer') //
-
   const [name, setName] = useState('')
-
   let [image, setImage] = useState([])
-
   let [photo, setPhoto] = useState('')
-
   const [unitPrice, setUnitPrice] = useState(0)
-
   const [description, setDescription] = useState('')
-
   const [telno, setTelno] = useState('') //
-
   let [delay, setDelay] = useState(0)
-
   let [transDate, setTransDate] = useState(new Date())
+  //let [expireDate, setExpireDate] = useState(new Date())
 
-  let [expireDate, setExpireDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(new Date())
+  // let [completeDate, setCompleteDate] = useState(new Date())
 
   let [serviceFees, setServiceFees] = useState(0)
   let [email, setEmail] = useState('')
-
-  // let email = ''
-  // email = email ? userInfo.email : ''
+  let [units, setUnits] = useState('')
 
   let rating = 0
   let numReviews = 0
@@ -76,6 +73,12 @@ export default function ServiceScreen(props) {
   const redirect = props.location.search
     ? props.location.search.split('=')[1]
     : '/'
+
+  /*  useEffect(() => {
+   
+
+    setExpireDate(newDate)
+  }, [myDate, newDate]) //myDate, newDate */
 
   useEffect(() => {
     if (!userInfo) {
@@ -87,12 +90,15 @@ export default function ServiceScreen(props) {
     dispatch(listServices())
   }, [dispatch])
 
-  //fileupload modules  userInfo.employmentStatu
-  //const [image, setImage] = useState(null)
-  //const [url, setUrl] = useState('')
   const [url, setUrl] = useState(null)
   const [progress, setProgress] = useState(0)
 
+  /* const addDays = (date, days) => {
+    let result = new Date(date)
+    result.setDate(result.getDate() + days)
+    return result
+  }
+ */
   const handleChange = (e) => {
     if (e.target.files[0]) {
       setImage(e.target.files[0])
@@ -127,22 +133,16 @@ export default function ServiceScreen(props) {
             })
         },
       )
-      //return //image
     }
 
     if (state.button === 2) {
       console.log('in state.button === 2 submit form')
 
-      delay = parseInt(delay)
-
-      let myDate = new Date()
-      let newDate = new Date(myDate.setDate(myDate.getDate() + delay))
-
-      console.log('newDate=', newDate)
-
       setTransDate(new Date())
-      setExpireDate(newDate)
       setEmail(userInfo.email)
+
+      console.log('transDate====', transDate)
+      console.log('endDate====', endDate)
 
       if (
         document.querySelector('img').src ===
@@ -175,8 +175,12 @@ export default function ServiceScreen(props) {
         return
       }
 
-      console.log('name====', name)
+      console.log('units=========', units)
 
+      if (!units) {
+        alert('Units required')
+        return
+      }
       if (!name) {
         alert('Name cannot be empty')
         return
@@ -189,13 +193,15 @@ export default function ServiceScreen(props) {
         alert('Description cannot be empty')
         return
       }
-      if (!delay) {
-        alert('delay is required')
-      }
+
       if (!userInfo.email) {
         alert('email is required')
       }
 
+      if (!endDate) {
+        alert('End date is required')
+        return
+      }
       dispatch(
         addToService(
           category,
@@ -207,10 +213,10 @@ export default function ServiceScreen(props) {
           numReviews,
           description,
           telno,
-          delay,
           transDate,
-          expireDate,
+          endDate,
           serviceFees,
+          units,
         ),
       )
       setCategory('')
@@ -220,10 +226,24 @@ export default function ServiceScreen(props) {
       setDescription('')
       setTelno('')
       setServiceFees(0)
+      setTransDate()
+      setEndDate()
+
+      props.history.push('/')
 
       alert('Service added successfully')
     }
   }
+
+  const [items] = React.useState([
+    {
+      label: 'Per Contract',
+      value: 'per contract',
+    },
+    { label: 'Per Hour', value: 'Per Hour' },
+    { label: 'Per Day', value: 'Per Day' },
+    { label: 'Per Month', value: 'Per Month' },
+  ])
 
   return (
     <div>
@@ -326,26 +346,42 @@ export default function ServiceScreen(props) {
                     requires
                     onChange={(e) => setUnitPrice(e.target.value)}
                   ></input>
-                  per contract/day/hour: state in description
+                  {/* per contract/day/hour: state in description */}
+                  <select
+                    onChange={(e) => handleUnitChange(e)}
+                    className="browser-default custom-select"
+                  >
+                    {items.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                  {/*  <select
+                    onChange={(e) => handleCategoryChange(e)}
+                    className="browser-default custom-select"
+                  >
+                    {Add.map((category, key) => (
+                      <option key={key} value={key}>
+                        {category}
+                      </option>
+                    ))}
+                  </select> */}
                 </label>
               </div>
               <br />
               <div>
                 <label>
-                  Give the number of days to display your service
-                  <br />
-                  <input
-                    type="number"
-                    id="delay"
-                    placeholder="Number of days"
-                    requires
-                    onChange={(e) => setDelay(e.target.value)}
-                  ></input>
+                  When will Service End?
+                  <DatePicker
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                  />
                 </label>
+                <br />
               </div>
               <br />
               <br />
-              {/* Owner's Email: {userInfo.email} */}
               <div>
                 <label>
                   Owner's Email
@@ -353,7 +389,7 @@ export default function ServiceScreen(props) {
                   <input
                     type="text"
                     id="email"
-                    placeholder="Number of days"
+                    placeholder="Owner's Email"
                     requires
                     onChange={(e) => setEmail(e.target.value)}
                   ></input>

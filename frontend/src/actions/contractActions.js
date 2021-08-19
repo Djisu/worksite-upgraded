@@ -44,6 +44,7 @@ export const listContracts = () => async (dispatch) => {
   }
 }
 
+
 export const addToContract = (
   user,
   delay,
@@ -100,7 +101,7 @@ export const addToContract = (
       },
     )
     dispatch({ type: CONTRACT_ENTRY_SUCCESS, payload: data.contract }) //data.contract
-    localStorage.setItem('contractItems', JSON.stringify(data.contract))
+    localStorage.setItem('contractDetails', JSON.stringify(data.contract))
 
     console.log('data=', data)
   } catch (error) {
@@ -168,7 +169,7 @@ export const editContract = (
       },
     )
     dispatch({ type: CONTRACT_UPDATE_SUCCESS, payload: data.contract }) //data.contract
-    localStorage.setItem('contractItems', JSON.stringify(data.contract))
+    localStorage.setItem('contractDetails', JSON.stringify(data.contract))
 
     console.log('data=', data)
   } catch (error) {
@@ -221,7 +222,7 @@ export const deleteContract = (id) => async (dispatch) => {
     console.log('data after delete=', data)
 
     dispatch({ type: CONTRACT_DELETE_SUCCESS, payload: data })
-    localStorage.removeItem('contractItems', JSON.stringify(data))
+    localStorage.removeItem('contractDetails', JSON.stringify(data))
   } catch (error) {
     dispatch({
       type: CONTRACT_DELETE_FAIL,

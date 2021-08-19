@@ -1,13 +1,10 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
 import { Link } from 'react-router-dom'
 import { addToContract } from '../actions/contractActions'
-
 import LoadingBox from '../components/LoadingBox'
 import MessageBox from '../components/MessageBox'
-
 import { storage } from '../firebase'
 
 export default function ContractScreen(props) {

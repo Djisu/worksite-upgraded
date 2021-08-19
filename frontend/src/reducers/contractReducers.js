@@ -49,7 +49,7 @@ export const contractDetailsReducer = (
   }
 }
 
-export const enterContractDetailsReducer = (
+/* export const enterContractDetailsReducer = (
   state = { loading: true, contract: {} },
   action,
 ) => {
@@ -69,7 +69,7 @@ export const enterContractDetailsReducer = (
     default:
       return state
   }
-}
+} */
 export const addToContractReducer = (
   state = { loading: true, contract: {} },
   action,

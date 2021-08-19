@@ -10,7 +10,6 @@ const userRouter = express.Router()
 userRouter.get(
   '/seed',
   expressAsyncHandler(async (req, res) => {
-    /*  await User.deleteMany({})*/
     const createdUsers = await User.insertMany(data.users)
     res.send({ createdUsers })
   }),
@@ -19,7 +18,6 @@ userRouter.get(
 userRouter.post(
   '/signin',
   expressAsyncHandler(async (req, res) => {
-    //console.log('in sign in')
     const user = await User.findOne({ email: req.body.email })
 
     if (user) {

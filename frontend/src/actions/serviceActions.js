@@ -19,7 +19,7 @@ import {
   SERVICE_UPDATE_REQUEST,
   SERVICE_UPDATE_SUCCESS,
   SERVICE_UPDATE_FAIL,
-  SERVICE_ADD_SUCCESS,
+  // SERVICE_ADD_SUCCESS,
   SERVICE_GET_REQUEST,
   SERVICE_GET_SUCCESS,
   SERVICE_GET_FAIL,
@@ -85,10 +85,10 @@ export const addToService = (
   numReviews,
   description,
   telno,
-  delay,
   transDate,
-  expireDate,
+  endDate,
   serviceFees,
+  units,
 ) => async (dispatch, getState) => {
   console.log('in addToService')
 
@@ -111,10 +111,10 @@ export const addToService = (
         numReviews,
         description,
         telno,
-        delay,
         transDate,
-        expireDate,
+        endDate,
         serviceFees,
+        units,
       },
       {
         headers: {
@@ -123,7 +123,7 @@ export const addToService = (
       },
     )
     dispatch({ type: SERVICE_ENTRY_SUCCESS, payload: data }) // data.service
-    dispatch({ type: SERVICE_ADD_SUCCESS, payload: data })
+    // dispatch({ type: SERVICE_ADD_SUCCESS, payload: data })
 
     localStorage.setItem('serviceItems', JSON.stringify(data)) // data.service
   } catch (error) {
@@ -140,18 +140,18 @@ export const addToService = (
 export const detailsService = (serviceEmail) => async (dispatch) => {
   dispatch({ type: SERVICE_DETAILS_REQUEST, payload: serviceEmail })
   try {
-    // console.log('in detailsService serviceEmail==', serviceEmail)
+    console.log('in detailsService serviceEmail==', serviceEmail)
 
     const { data } = await Axios.get(`/api/services/${serviceEmail}`)
 
-    // console.log('serviceEmail==' + serviceEmail)
-    // console.log('detailsService data=====', data)
+    console.log('serviceEmail==' + serviceEmail)
+    console.log('detailsService data=====', data)
 
     dispatch({
       type: SERVICE_DETAILS_SUCCESS,
       payload: data,
     })
-    localStorage.setItem('serviceItems', JSON.stringify(data))
+    localStorage.setItem('serviceDetails', JSON.stringify(data))
   } catch (error) {
     dispatch({
       type: SERVICE_DETAILS_FAIL,
