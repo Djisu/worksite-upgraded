@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { addToService, listServices } from '../actions/serviceActions'
+import { listServicefees } from '../actions/servicefeesActions'
 import LoadingBox from '../components/LoadingBox'
 import MessageBox from '../components/MessageBox'
 import { storage } from '../firebase'
@@ -23,7 +24,14 @@ export default function ServiceScreen(props) {
   const { success: successAdd, error: errorAdd, loading: loadingAdd } =
     serviceItems || ''
 
-  console.log('serviceItems==', serviceItems)
+  //console.log('serviceItems==', serviceItems)
+
+  const servicefeesList = useSelector((state) => state.servicefeesList)
+  const fees = servicefeesList['servicefees']
+
+  //console.log('fees===', fees)
+  // const { serviceFees123 } = servicefees
+  //console.log(' serviceFees123:', serviceFees123)
 
   const [addrtype, setAddrtype] = useState([
     'Printer',
@@ -74,11 +82,10 @@ export default function ServiceScreen(props) {
     ? props.location.search.split('=')[1]
     : '/'
 
-  /*  useEffect(() => {
-   
-
-    setExpireDate(newDate)
-  }, [myDate, newDate]) //myDate, newDate */
+  function getDifferenceInDays() {
+    const diffInMs = Math.abs(endDate - new Date())
+    return Math.floor(diffInMs / (1000 * 60 * 60 * 24))
+  }
 
   useEffect(() => {
     if (!userInfo) {
@@ -88,7 +95,16 @@ export default function ServiceScreen(props) {
 
   useEffect(() => {
     dispatch(listServices())
+  })
+
+  useEffect(() => {
+    console.log('dispatch(listServicefees())')
+    dispatch(listServicefees())
   }, [dispatch])
+
+  useEffect(() => {
+    setServiceFees(getDifferenceInDays() * fees)
+  }, [getDifferenceInDays, fees])
 
   const [url, setUrl] = useState(null)
   const [progress, setProgress] = useState(0)
@@ -136,12 +152,14 @@ export default function ServiceScreen(props) {
     }
 
     if (state.button === 2) {
-      console.log('in state.button === 2 submit form')
-
       setTransDate(new Date())
       setEmail(userInfo.email)
 
-      console.log('transDate====', transDate)
+      /* let sFees = getDifferenceInDays() * fees
+
+      setServiceFees(sFees) */
+      console.log('in state.button === 2 submit form')
+      console.log('serviceFees====', serviceFees)
       console.log('endDate====', endDate)
 
       if (
@@ -175,7 +193,12 @@ export default function ServiceScreen(props) {
         return
       }
 
-      console.log('units=========', units)
+      console.log('serviceFees=========', serviceFees)
+
+      if (serviceFees === 0) {
+        alert('service fees is required')
+        return
+      }
 
       if (!units) {
         alert('Units required')
@@ -357,7 +380,6 @@ export default function ServiceScreen(props) {
                       </option>
                     ))}
                   </select>
-                
                 </label>
               </div>
               <br />
@@ -368,10 +390,35 @@ export default function ServiceScreen(props) {
                     selected={endDate}
                     onChange={(date) => setEndDate(date)}
                   />
+                  Advertising Day: {getDifferenceInDays()}
+                  <br />
+                  Daily Rate: {fees}
+                  <br />
+                  <div style={{ color: 'red', fontWeight: 'bold' }}>
+                    Total Payable: {getDifferenceInDays() * fees}
+                  </div>
+                  <br />
+                  {/* {getDifferenceInDays(endDate - new Date())} */}
                 </label>
               </div>
               <br />
-              <br />
+              {/* <div>
+                <label>
+                  service Fees
+                  <br />
+                  <input
+                    type="number"
+                    id="serviceFees"
+                    placeholder="Service Fees"
+                    requires
+                    onChange={(e) =>
+                      setServiceFees(getDifferenceInDays() * fees)
+                    }
+                    onBlur={(e) => setServiceFees(getDifferenceInDays() * fees)}
+                  ></input>
+                </label>
+              </div>
+              <br /> */}
               <div>
                 <label>
                   Owner's Email

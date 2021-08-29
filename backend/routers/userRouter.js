@@ -115,4 +115,18 @@ userRouter.put(
     }
   }),
 )
+
+//Find all users
+userRouter.get(
+  '/',
+  expressAsyncHandler(async (req, res) => {
+    const users = await User.find({})
+
+    if (users) {
+      res.send(users)
+    }
+    res.status(401).send({ message: 'Users not found' })
+  }),
+)
+
 export default userRouter

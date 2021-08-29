@@ -12,7 +12,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 export default function ContractScreen(props) {
   console.log('props.location.state=', props.location.state)
 
-  let newState
+  let newState = ""
   newState = newState ? props.location.state : ''
   console.log('props.location.state.name: ', props.location.state.name)
 

@@ -1,11 +1,8 @@
 import mongoose from 'mongoose'
+//var Schema = mongoose.Schema;
 
 const servicefeesSchema = new mongoose.Schema(
   {
-    Service: {
-      type: Schema.Types.ObjectId,
-      ref: 'Service',
-    },
     serviceFees: { type: Number, required: true },
   },
   {

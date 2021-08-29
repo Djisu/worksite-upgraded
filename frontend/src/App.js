@@ -1,4 +1,6 @@
-import React, { useEffect } from 'react'
+import * as React from 'react'
+
+
 import { Link } from 'react-router-dom'
 import { BrowserRouter, Route } from 'react-router-dom'
 
@@ -16,20 +18,21 @@ import ContractListScreen from './screens/ContractListScreen'
 import RateServiceScreen from './screens/RateServiceScreen'
 import EditServiceScreen from './screens/EditServiceScreen'
 import EditContractScreen from './screens/EditContractScreen'
-import { detailsContract } from './actions/contractActions'
-import { useState } from 'react'
+import ServicefeesScreen from './screens/ServicefeesScreen'
+import UserListScreen from './screens/UserListScreen'
+// import DashBoardScreen from './screens/DashBoardScreen'
 
 function App() {
   const userSignin = useSelector((state) => state.userSignin)
   const { userInfo } = userSignin || ''
 
-  const contractDetails = useSelector((state) => state.contractDetails)
-  const { contract } = contractDetails
+  //const contractDetails = useSelector((state) => state.contractDetails)
+  // const { contract } = contractDetails
 
   //console.log('length of contract=', Object.keys(contract).length)
 
   const serviceDetails = useSelector((state) => state.serviceDetails)
-  const { loading, error, service } = serviceDetails || ''
+  const { service } = serviceDetails || ''
 
   const dispatch = useDispatch()
 
@@ -48,7 +51,7 @@ function App() {
             </Link>
           </div>
           <div>
-           {/*  {Object.keys(contract).length > 0 && (
+            {/*  {Object.keys(contract).length > 0 && (
               <span className="badge">{Object.keys(contract).length}</span>
             )} */}
             {userInfo ? (
@@ -111,7 +114,13 @@ function App() {
                 <Link to="#admin">
                   Admin <i className="fa fa-caret-down"></i>
                 </Link>
-                <ul className="dropdown-content">
+                <ul
+                  className="dropdown-content"
+                  style={{ fontSize: '10px', textAlign: 'left' }}
+                >
+                  <li>
+                    <Link to="/serviceFees">Enter Service Fees</Link>
+                  </li>
                   <li>
                     <Link to="/dashboard">Dashboard</Link>
                   </li>
@@ -134,6 +143,12 @@ function App() {
           <Route path="/rateService" component={RateServiceScreen}></Route>
           <Route path="/editService" component={EditServiceScreen}></Route>
           <Route path="/editContract" component={EditContractScreen}></Route>
+          <Route path="/serviceFees" component={ServicefeesScreen}></Route>
+          <Route path="/userlist" component={UserListScreen}></Route>
+          {/* <Route path="/dashboard" component={DashBoardScreen}></Route> */}
+
+          {/* <Route path="/admin" component={AdminApp} />
+          <Route path="/" component={App} /> */}
 
           <PrivateRoute
             path="/profile"

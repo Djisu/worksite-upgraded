@@ -1,4 +1,5 @@
 import { createStore, compose, applyMiddleware, combineReducers } from 'redux'
+import * as reactAdmin from 'ra-core'
 import thunk from 'redux-thunk'
 import { cartReducer } from './reducers/cartReducers'
 import {
@@ -18,8 +19,20 @@ import {
   serviceUpdateReducer,
   getServiceReducer,
 } from './reducers/serviceReducers'
+
+import {
+  //servicefeesDetailsReducer,
+  servicefeesListReducer,
+  addToServicefeesReducer,
+  getServicefeesReducer,
+  //deleteServicefeesReducer,
+  //servicefeesUpdateReducer,
+  //getServicefeesReducer,
+} from './reducers/servicefeesReducers'
+
 import {
   userDetailsReducer,
+  userListReducer,
   userRegisterReducer,
   userSigninReducer,
   userUpdateProfileReducer,
@@ -41,6 +54,15 @@ const initialState = {
       ? JSON.parse(localStorage.getItem('serviceDetails'))
       : {},
   },
+  servicefees: {
+    servicefeesItems: localStorage.getItem('servicefeesItems')
+      ? JSON.parse(localStorage.getItem('servicefeesItems'))
+      : {},
+    servicefeesDetails: localStorage.getItem('servicefeesDetails')
+      ? JSON.parse(localStorage.getItem('servicefeesDetails'))
+      : {},
+  },
+
   contract: {
     contractDetails: localStorage.getItem('contractDetails')
       ? JSON.parse(localStorage.getItem('contractDetails'))
@@ -59,6 +81,14 @@ const reducer = combineReducers({
   deleteService: deleteServiceReducer,
   getService: getServiceReducer,
 
+  servicefeesList: servicefeesListReducer,
+  //servicefeesDetails: servicefeesDetailsReducer,
+  //servicefeesUpdate: servicefeesUpdateReducer,
+  addToServicefees: addToServicefeesReducer,
+  servicefees: addToServicefeesReducer,
+  //deleteServicefees: deleteServicefeesReducer,
+  getServicefees: getServicefeesReducer,
+
   contractList: contractListReducer,
   contractDetails: contractDetailsReducer,
   addToContract: addToContractReducer,
@@ -69,13 +99,25 @@ const reducer = combineReducers({
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
+  userList: userListReducer,
 })
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
 const store = createStore(
   reducer,
   initialState,
   composeEnhancer(applyMiddleware(thunk)),
+)
+
+store.dispatch(
+  reactAdmin.registerResource({
+    name: 'myStuff',
+    hasList: true,
+    hasEdit: false,
+    hasShow: false,
+    hasCreate: false,
+  }),
 )
 
 export default store

@@ -3,7 +3,6 @@ import expressAsyncHandler from 'express-async-handler'
 import data from '../data.js'
 import Service from '../models/serviceModel.js'
 import { isAuth } from '../utils.js'
-import moment from 'moment'
 
 const serviceRouter = express.Router()
 
@@ -106,8 +105,6 @@ serviceRouter.get(
   expressAsyncHandler(async (req, res) => {
     console.log('serviceRouter.get')
 
-    const today = moment().startOf('day')
-
     console.log('const service = await Service.find')
 
     const service = await Service.find({
@@ -129,10 +126,10 @@ serviceRouter.delete(
   '/:id',
   expressAsyncHandler(async (req, res) => {
     console.log('in serviceRouter.delete()')
-    const service = await Service.findOneAndDelete(
+    await Service.findOneAndDelete(
       { id: req.params._id },
 
-      function (err, service) {
+      function (err) {
         if (!err) {
           res.send({ message: req.params._id + ' removed' })
         } else {
@@ -148,17 +145,13 @@ serviceRouter.get(
   expressAsyncHandler(async (req, res) => {
     console.log('in serviceRouter.get(')
 
-    const service = await Service.findById(
-      { id: req.params._id },
+    const service = await Service.findById(req.params.id)
 
-      function (err, service) {
-        if (!err) {
-          res.send(service)
-        } else {
-          res.status(404).send({ message: 'Service not found' })
-        }
-      },
-    )
+    if (service) {
+      res.send(service)
+    } else {
+      res.status(404).send({ message: 'Service not found' })
+    }
   }),
 )
 

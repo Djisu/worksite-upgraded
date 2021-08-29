@@ -226,6 +226,8 @@ img.large {
   position: relative;
 }
 .dropdown-content {
+  font-size: '10px';
+  text-align: 'left';
   position: absolute;
   display: none;
   right: 0;
@@ -240,7 +242,7 @@ img.large {
 .dropdown:hover .dropdown-content {
   display: block;
 }
-/* Checkout Steps */
+/* Checkout Steps */ 
 .checkout-steps > div {
   border-top: 0.3rem #c0c0c0 solid;
   color: #c0c0c0;

@@ -4,8 +4,13 @@ import mongoose from 'mongoose'
 import UserRouter from './routers/userRouter.js'
 import ServiceRouter from './routers/serviceRouter.js'
 import ContractRouter from './routers/contractRouter.js'
+import ServicefeesRouter from './routers/servicefeesRouter.js'
+import dotenv from 'dotenv'
 
 import { keys } from './config/keys.js'
+
+dotenv.config()
+
 const { mongoURI } = keys
 
 //console.log('mongoURI==', mongoURI)
@@ -31,6 +36,7 @@ mongoose.connect(mongoURI, {
 app.use('/api/users', UserRouter)
 app.use('/api/services', ServiceRouter)
 app.use('/api/contracts', ContractRouter)
+app.use('/api/servicefees', ServicefeesRouter)
 
 //Default route
 app.get('/', (req, res) => {
@@ -39,6 +45,7 @@ app.get('/', (req, res) => {
 
 //Middleware for catching errors
 app.use((err, req, res, next) => {
+  next()
   res.status(500).send({ message: err.message })
 })
 
