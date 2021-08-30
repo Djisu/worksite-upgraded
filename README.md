@@ -1,5 +1,5 @@
 This is an app which brings artisans and clients together. It is being built using Reactjs, Redux, Expressjs, Nodejs and MongoAtlas.
-It is a single-page app and responsive. It will soon be deployed to Netlify. The images used in the app is deployed on Firebase.
+It is a single-page app and responsive. The images used in the app is deployed on Firebase.
 
 It is used by artisans to advertise their services. A client can use it to hire the service of an artisan.
 
