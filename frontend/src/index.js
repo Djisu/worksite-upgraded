@@ -27,7 +27,4 @@ ReactDOM.render(
 reportWebVitals()
 
 
- {/* <Switch>
-    <Route path="/admin" component={AdminApp} />
-    <Route path="/" component={App} />
-<Switch></Switch> */}
+ 

@@ -4,7 +4,6 @@ import { storage } from '../firebase'
 
 const FileUpload = () => {
   const [image, setImage] = useState(null)
-  //const [url, setUrl] = useState('')
   const [url, setUrl] = useState(null)
   const [progress, setProgress] = useState(0)
 

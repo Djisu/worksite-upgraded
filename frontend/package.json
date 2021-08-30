@@ -50,6 +50,6 @@
     ]
   },
   "devDependencies": {
-    "eslint-plugin-react-hooks": "^4.2.0"
+    "eslint-plugin-react-hooks": "^4.2.1-alpha-46a0f050a-20210828"
   }
 }

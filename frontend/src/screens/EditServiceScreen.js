@@ -10,7 +10,7 @@ import { storage } from '../firebase'
 
 export default function ServiceScreen(props) {
   const serviceId = props.location.state.id
-  const category = props.location.state.category
+  //const category = props.location.state.category
   const picture = props.location.state.image
 
   const [name, setName] = useState('')
@@ -18,7 +18,8 @@ export default function ServiceScreen(props) {
   const [unitPrice, setUnitPrice] = useState(0)
   const [description, setDescription] = useState('')
   let [delay, setDelay] = useState(0)
-  const [transdate, setTransDate] = useState()
+  //const [transdate, setTransDate] = useState()
+  //let transdate = new Date()
   const [photo, setPhoto] = useState('')
 
   const serviceDetails = useSelector((state) => state.serviceDetails)
@@ -51,10 +52,10 @@ export default function ServiceScreen(props) {
       setDescription(service.description)
       setDelay(service.delay)
     }
-  }, [dispatch, successUpdate, props.history]) 
+  }, [dispatch, successUpdate, props.history, service, serviceId]) 
 
-  const rating = 0
-  const numReviews = 0
+ /*  const rating = 0
+  const numReviews = 0 */
 
   const redirect = props.location.search
     ? props.location.search.split('=')[1]
@@ -63,11 +64,11 @@ export default function ServiceScreen(props) {
   const [url, setUrl] = useState(null)
   const [progress, setProgress] = useState(0)
 
-  const handleChange = (e) => {
+  /* const handleChange = (e) => {
     if (e.target.files[0]) {
       setImage(e.target.files[0])
     }
-  }
+  } */
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -111,10 +112,10 @@ export default function ServiceScreen(props) {
 
         delay = parseInt(delay)
 
-        let myDate = new Date()
-        let newDate = new Date(myDate.setDate(myDate.getDate() + delay))
+        //let myDate = new Date()
+        //let newDate = new Date(myDate.setDate(myDate.getDate() + delay))
 
-        setTransDate(new Date())
+        //setTransDate(new Date())
       }
 
       if (

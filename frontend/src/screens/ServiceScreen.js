@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { addToService, listServices } from '../actions/serviceActions'
@@ -82,10 +82,15 @@ export default function ServiceScreen(props) {
     ? props.location.search.split('=')[1]
     : '/'
 
-  function getDifferenceInDays() {
+  const getDifferenceInDays = useCallback(() => {
+    // handle the click event
     const diffInMs = Math.abs(endDate - new Date())
     return Math.floor(diffInMs / (1000 * 60 * 60 * 24))
-  }
+  }, [endDate])
+  /* function getDifferenceInDays() {
+    const diffInMs = Math.abs(endDate - new Date())
+    return Math.floor(diffInMs / (1000 * 60 * 60 * 24))
+  } */
 
   useEffect(() => {
     if (!userInfo) {

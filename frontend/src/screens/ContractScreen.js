@@ -12,8 +12,8 @@ import 'react-datepicker/dist/react-datepicker.css'
 export default function ContractScreen(props) {
   console.log('props.location.state=', props.location.state)
 
-  let newState = ""
-  newState = newState ? props.location.state : ''
+  // let newState = ""
+  // newState = newState ? props.location.state : ''
   console.log('props.location.state.name: ', props.location.state.name)
 
   const redirect = props.location.search
@@ -33,7 +33,7 @@ export default function ContractScreen(props) {
   let serviceList = useSelector((state) => state.serviceList)
   let { services } = serviceList
 
-  console.log('services====', services)
+  // console.log('services====', services)
 
   let userSignin = useSelector((state) => state.userSignin)
   let { userInfo } = userSignin
@@ -41,7 +41,7 @@ export default function ContractScreen(props) {
   let userRegister = useSelector((state) => state.userRegister)
   let { loading, error } = userRegister
 
-  let [delay, setDelay] = useState(0)
+  // let [delay, setDelay] = useState(0)
   let [transDate, setTransDate] = useState(new Date())
   let [completeDate, setCompleteDate] = useState(new Date())
   let [description, setDescription] = useState('')
@@ -49,23 +49,28 @@ export default function ContractScreen(props) {
   let [comments, setComments] = useState('')
   let [quantity, setQuantity] = useState(0)
 
-  let [user, setUser] = useState(userInfo._id)
-  let [serviceEmail, setServiceEmail] = useState(props.location.state.email)
-  let [email, setEmail] = useState(userInfo.email)
-  let [telno, setTelno] = useState(userInfo.telno)
+  //let [user, setUser] = useState(userInfo._id)
+  let user = userInfo._id
+  // let [serviceEmail, setServiceEmail] = useState(props.location.state.email)
+  let serviceEmail = props.location.state.email
+  // let [email, setEmail] = useState(userInfo.email)
+  let email = userInfo.email
+  //let [telno, setTelno] = useState(userInfo.telno)
+  let telno = userInfo.telno
   // let [endDate, setEndDate] = useState(new Date())
 
   let unitPrice = 0
   unitPrice = unitPrice ? props.location.state.unitPrice : 0
 
-  let servid = ''
-  servid = servid ? props.location.state._id : ''
+  //let servid = servid ? props.location.state._id : ''
 
   let [totalCost, setTotalCost] = useState(0)
   let [isPaid, setIsPaid] = useState(false)
   let [isCompleted, setIsCompleted] = useState(false)
-  let [service, setService] = useState(props.location.state.name)
-  let [imagex, setImagex] = useState(props.location.state.image)
+  // let [service, setService] = useState(props.location.state.name)
+  let service = props.location.state.name
+  //let [imagex, setImagex] = useState(props.location.state.image)
+  let imagex = props.location.state.image
 
   const [image, setImage] = useState(null)
   const [url, setUrl] = useState(null)
@@ -77,9 +82,9 @@ export default function ContractScreen(props) {
     }
   }
 
-  const handleServiceChange = (e) => {
+  /*  const handleServiceChange = (e) => {
     setService(e.target.value)
-  }
+  } */
 
   useEffect(() => {
     if (!userInfo) {

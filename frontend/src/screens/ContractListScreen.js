@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router'
+//import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
 import { detailsContract } from '../actions/contractActions'
 import LoadingBox from '../components/LoadingBox'
@@ -16,7 +16,7 @@ function ContractListScreen(props) {
 
   const removeFromContractHandler = (_id) => {
     //Confirm deletion
-    if (window.confirm('Do you want to delete contract?') == false) {
+    if (window.confirm('Do you want to delete contract?') === false) {
       return
     }
 
@@ -38,7 +38,7 @@ function ContractListScreen(props) {
       alert('You have NO contracts yet')
       props.history.push('/')
     }
-  }, [contractDetails])
+  }, [contractDetails, props.history])
 
   return (
     <div>

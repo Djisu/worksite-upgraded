@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { createReview, detailsService } from '../actions/serviceActions'
 import Rating from '../components/Rating'
 import MessageBox from '../components/MessageBox'
-import LoadingBox from '../components/LoadingBox'
+//import LoadingBox from '../components/LoadingBox'
 import { SERVICE_REVIEW_CREATE_RESET } from '../constants/serviceConstants'
 
 function RateServiceScreen(props) {
@@ -21,8 +21,8 @@ function RateServiceScreen(props) {
 
   const serviceReviewCreate = useSelector((state) => state.serviceReviewCreate)
   const {
-    loading: loadingReviewCreate,
-    error: errorReviewCreate,
+   /*  loading: loadingReviewCreate,
+    error: errorReviewCreate, */
     success: successReviewCreate,
   } = serviceReviewCreate
 
