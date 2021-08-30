@@ -171,17 +171,13 @@ contractRouter.delete(
     console.log('in contractRouter.delete()', req.params.id)
     const contractid = req.params.id
 
-    const contract = await Contract.deleteOne(
-      { _id: contractid },
+    const contract = await Contract.deleteOne({ _id: contractid })
 
-      function (err, contract) {
-        if (!err) {
-          res.send({ message: contractid + ' removed' })
-        } else {
-          res.status(404).send({ message: 'Contract not found' })
-        }
-      },
-    )
+    if (contract) {
+      res.send(contract)
+    } else {
+      res.status(404).send({ message: 'Contract Not Found' })
+    }
   }),
 )
 
