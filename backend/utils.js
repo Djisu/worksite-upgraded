@@ -15,7 +15,7 @@ export const generateToken = (user) => {
   )
 }
 
-export const isAuth = (req, rs, next) => {
+export const isAuth = (req, res, next) => {
   const authorization = req.headers.authorization
 
   if (authorization) {
