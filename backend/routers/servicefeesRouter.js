@@ -1,6 +1,6 @@
 import express from 'express'
 import expressAsyncHandler from 'express-async-handler'
-import Servicefees from '../models/ServicefeesModel.js'
+import Servicefees from '../models/servicefeesModel.js'
 import { isAuth } from '../utils.js'
 //import moment from 'moment'
 
