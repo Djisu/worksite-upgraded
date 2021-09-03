@@ -63,49 +63,49 @@ function ServiceListScreen(props) {
 
   return (
     <div>
-      List of Services for {userInfo.email}
+      <div className="row">List of Services for {userInfo.email}</div>
+
       {!userInfo.email && <h3>Kindly re-sign in</h3>}
       {!service && <h3>No services here!!</h3>}
+
       {loading ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
         <MessageBox variant="danger">This is error: {error}</MessageBox>
       ) : (
         service && (
-          <div className="row center">
-            {service.map((item) => (
-              <div key={item._id} className="card">
-                <div style={{ textAlign: 'center', padding: '2rem' }}>
-                  <img className="medium" src={item.image} alt={item.name} />
-                </div>
-
-                <div className="card-body">
-                  <br />
-                  <br />
-                  <span>{item.name}</span>
-                  <br />
-                  <br />
-                  <span>{item.description}</span>
-                  <br />
-                  <br />
-                  <span>{item.email}</span>
-                  <br />
-                  <br />
-                  <span>{item.unitPrice}</span>
-                  <br />
-                  <span>{item.expireDate}</span>
-                  <br />
-                  <div>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>IMAGE</th>
+                <th>NAME</th>
+                <th>DESCRIPTION</th>
+                <th>EMAIL</th>
+                <th>UNIT PRICE</th>
+                <th>EXPIRE DATE</th>
+                <th>ACTIVITY</th>
+              </tr>
+            </thead>
+            <tbody>
+              {service.map((item) => (
+                <tr key={item._id}>
+                  <td style={{ textAlign: 'center', padding: '2rem' }}>
+                    <img className="small" src={item.image} alt={item.name} />
+                  </td>
+                  <td>{item.name}</td>
+                  <td>{item.description}</td>
+                  <td>{item.email}</td>
+                  <td>{item.unitPrice}</td>
+                  <td>{item.expireDate}</td>
+                  <td>
                     <button
-                      className="primary block delete"
+                      className="small delete"
                       onClick={() => removeFromServiceHandler(item._id)}
                     >
                       Delete
                     </button>
-                    <br />
-                    <br />
                     <button
-                      className="primary block"
+                      className="small "
                       onClick={() =>
                         editServiceHandler(
                           item._id,
@@ -118,11 +118,11 @@ function ServiceListScreen(props) {
                     >
                       Edit
                     </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )
       )}
     </div>

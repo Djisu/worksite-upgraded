@@ -51,71 +51,55 @@ function ContractListScreen(props) {
         <MessageBox variant="danger">This is error: {error}</MessageBox>
       ) : (
         contract && (
-          <div className="row center">
+          <table className="table">
+            <thead style={{ backgroundColor: 'blueviolet', color: 'white' }}>
+              <tr>
+                <th>IMAGE</th>
+                <th>SERVICE NAME</th>
+                <th>DESCRIPTION</th>
+                <th>DOCUMENTS LIST</th>
+                <th>UNIT PRICE</th>
+                <th>QUANTITY</th>
+                <th>TOTAL COST</th>
+                <th>ACTIVITY</th>
+              </tr>
+            </thead>
             {contract.map((item) => (
-              <div key={item._id} className="card">
-                <div style={{ textAlign: 'center', padding: '2rem' }}>
-                  <img className="medium" src={item.image} alt={item.name} />
-                </div>
-                <div className="card-body">
-                  <br />
-                  <br />
-                  <ul>
-                    <li>
-                      <span style={{ fontWeight: 'bold' }}>
-                        {' '}
-                        Service Name: {item.service}
-                      </span>
+              <tr key={item._id}>
+                <td style={{ textAlign: 'center', padding: '2rem' }}>
+                  <img className="small" src={item.image} alt={item.name} />
+                </td>
+                <td>{item.service}</td>
+                <td>{item.description}</td>
+                <td>
+                  {item.documents.map((document, index) => (
+                    <li key={index} style={{ fontSize: '10px' }}>
+                      <a href={document} target="blank">
+                        Click to download document
+                      </a>
                     </li>
-                    <li>
-                      <span style={{ fontWeight: 'bold' }}>
-                        Description:{item.description}
-                      </span>
-                    </li>
-                    <br />
-                    <li>
-                      Contract Documents:
-                      <span>
-                        {item.documents.map((document, index) => (
-                          <li key={index}>
-                            <a href={document} target="blank">
-                              Click to download document
-                            </a>
-                          </li>
-                        ))}
-                      </span>
-                    </li>
-                    <br />
-                    <li>
-                      <span>Unit Price: {item.unitPrice}</span>
-                    </li>
-                    <li>
-                      <span>Quantity Requested: {item.quantity}</span>
-                    </li>
-                    <li>
-                      <span>Total Cost: {item.totalCost}</span>
-                    </li>
-                  </ul>
-                  <br />
-                  <br />
+                  ))}
+                </td>
+                <td>{item.unitPrice}</td>
+                <td>{item.quantity}</td>
+                <td>{item.totalCost}</td>
+                <td>
                   <button
-                    className="delete block"
+                    className="delete small"
                     onClick={() => removeFromContractHandler(item._id)}
                   >
                     Delete
                   </button>
-                  <br />
-                  <br />
                   <button
-                    className="primary block"
+                    className="primary small"
                     onClick={() => editContractHandler(item)}
                   >
                     Edit
                   </button>
-                </div>
-              </div>
+                </td>
+              </tr>
             ))}
-          </div>
+          </table>
         )
       )}
     </div>
