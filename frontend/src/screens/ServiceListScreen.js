@@ -75,7 +75,7 @@ function ServiceListScreen(props) {
       ) : (
         service && (
           <table className="table">
-            <thead>
+            <thead style={{ backgroundColor: 'blueviolet', color: 'white' }}>
               <tr>
                 <th>IMAGE</th>
                 <th>NAME</th>
