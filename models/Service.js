@@ -1,6 +1,6 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 
-const reviewSchema = new mongoose.Schema(
+const ReviewSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     comment: { type: String, required: true },
@@ -11,18 +11,20 @@ const reviewSchema = new mongoose.Schema(
   },
 )
 
-const serviceSchema = new mongoose.Schema(
+const ServiceSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
+    },
     category: { type: String, required: true },
-    email: { type: String },
     name: { type: String, required: true, unique: true },
     image: { type: String },
     unitPrice: { type: Number, required: true },
     rating: { type: Number },
     numReviews: { type: Number },
     description: { type: String, required: true },
-    telno: { type: String },
-    reviews: [reviewSchema],
+    reviews: [ReviewSchema],
     transDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     serviceFees: { type: Number },
@@ -33,8 +35,8 @@ const serviceSchema = new mongoose.Schema(
   },
 )
 
-const Service = mongoose.model('Service', serviceSchema)
+const Service = mongoose.model('service', ServiceSchema)
 
-export default Service
+// export default Service
 
 //, unique: true , required: true

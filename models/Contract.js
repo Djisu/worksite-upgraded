@@ -1,8 +1,11 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 
-const contractSchema = new mongoose.Schema(
+const ContractSchema = new mongoose.Schema(
   {
-    user: { type: String, required: true },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
+    },
     transDate: { type: Date, required: true },
     completeDate: { type: Date, required: true },
     description: { type: String, required: true },
@@ -24,5 +27,4 @@ const contractSchema = new mongoose.Schema(
   },
 )
 
-const Contract = mongoose.model('Contract', contractSchema)
-export default Contract
+module.exports = mongoose.model('contract', ContractSchema)
