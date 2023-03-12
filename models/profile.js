@@ -7,6 +7,7 @@ const ProfileSchema = new mongoose.Schema({
   },
   company: {
     type: String,
+    required: true,
   },
 
   status: {
@@ -17,13 +18,25 @@ const ProfileSchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
+  experience: [
+    {
+      title: {
+        type: String,
+        required: true,
+      },
+      customer: {
+        type: String,
+        required: true,
+      },
+      description: {
+        type: String,
+      },
+    },
+  ],
   bio: {
     type: String,
   },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
+  isPaid: { type: Boolean, required: true, default: false },
 })
 
 module.exports = Profile = mongoose.model('profile', ProfileSchema)

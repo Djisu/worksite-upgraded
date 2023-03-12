@@ -4,6 +4,9 @@ const auth = require('../../middleware/auth')
 const { check, validationResult } = require('express-validator')
 const Contract = require('../../models/Contract')
 
+const config = require('config')
+const epw = config.get('emailPassword')
+
 const User = require('../../models/User')
 
 const nodemailer = require('nodemailer')
@@ -19,7 +22,7 @@ router.get('/', (req, res) => res.send('Contract route'))
 router.get('/me', auth, async (req, res) => {
   try {
     const contract = await Contract.findOne({
-      user: req.contract.id,
+      user: req.user.id,
     }).populate('contract', ['service', 'description']) //set user id from the token
 
     if (!contract) {
@@ -45,7 +48,10 @@ router.post(
       check('completeDate', 'Completion Date is required').not().isEmpty(),
       check('quantity', 'Quantity is required').not().isEmpty(),
       check('unitPrice', 'Unit Price is required').not().isEmpty(),
+      check('totalCost', 'Total Cost is required').not().isEmpty(),
       check('service', 'Service is required').not().isEmpty(),
+      check('isPaid', 'isPaid is required').not().isEmpty(),
+      check('isCompleted', 'isCompleted is required').not().isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -54,7 +60,16 @@ router.post(
       return res.status(400).json({ errors: errors.array() })
     }
 
+    console.log('start')
+
+    const user = await User.findOne({
+      user: req.user.id,
+    })
+
+    console.log('user.email', user.email)
+
     const {
+      contractId,
       transDate,
       completeDate,
       description,
@@ -73,17 +88,20 @@ router.post(
     } = req.body
 
     // Build profile object
+    // console.log('isPaid', isPaid)
+    // console.log('isCompleted', isCompleted)
     const contractFields = {}
 
     contractFields.user = req.user.id
 
+    if (contractId) contractFields.contractId = contractId
     if (transDate) contractFields.transDate = transDate
     if (completeDate) contractFields.completeDate = completeDate
     if (description) contractFields.description = description
     if (documents) {
-      contractFields.documents = document
+      contractFields.documents = documents
         .split(',')
-        .map((document) => skill.trim())
+        .map((document) => document.trim())
     }
     if (comments) contractFields.comments = comments
     if (quantity) contractFields.quantity = quantity
@@ -98,10 +116,11 @@ router.post(
     if (image) contractFields.image = image
 
     try {
-      let contract = await Contract.findOne({ contract: req.contract._id })
+      // let contract = await Contract.findOne({ _id: req.contract.id })
+      let contract = await Contract.findById(req.contractId)
 
       if (contract) {
-        // Update old contract
+        // Update old contract findById(id)
         contract = await Contract.findOneAndUpdate(
           { contract: req.contract._id },
           { $set: contractFields },
@@ -109,92 +128,49 @@ router.post(
         )
         return res.json(contract)
       }
+      console.log('about to Create new contract')
 
-      // Create new contract
+      // console.log('contractFields.isPaid', contractFields.isPaid)
+      // console.log('contractFields.isCompleted', contractFields.isCompleted)
+
+      // Create new contract  var userID=uuid();
+      contractFields.contractId = uuid()
       contract = new Contract(contractFields)
       await contract.save()
 
+      NODE_TLS_REJECT_UNAUTHORIZED = '0'
+
       //Email sending
       var transporter = nodemailer.createTransport({
-        /* service: 'gmail', */
+        service: 'gmail',
         host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
+        port: 587,
+        secure: false, // true for 465, false for other ports
         auth: {
-          user: user,
-          pass: pass,
+          user: 'djesudjoleto@gmail.com',
+          pass: 'kijwikopmbypvyxj',
         },
         tls: {
           rejectUnauthorized: false,
         },
       })
-
-      var mailOptions = {
-        from: user,
-        to: req.body.serviceEmail,
-        subject: 'Contract from ' + req.body.email,
-        text: req.body.description,
+      const mailOptions = {
+        from: 'djesudjoleto@gmail.com', // sender address
+        to: 'pfleischer2002@yahoo.co.uk', // list of receivers
+        subject: 'Contract confirmed', // Subject line
+        html: '<p>This is to inform you that your work will be done.</p>', // plain text body
       }
-
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log(error)
-        } else {
-          console.log('Email sent: ' + info.response)
-        }
+      transporter.sendMail(mailOptions, function (err, info) {
+        if (err) console.log(err)
+        else console.log(info)
       })
+
       //End of Email
 
       return res.json(contract)
     } catch (err) {
       console.error(err.message)
-      res.status(500).send('Server Error')
-    }
-  },
-)
-
-router.put(
-  '/:id',
-  [
-    auth,
-    [
-      check('description', 'Description is required').not().isEmpty(),
-      check('completeDate', 'Completion Date is required').not().isEmpty(),
-      check('quantity', 'Quantity is required').not().isEmpty(),
-      check('unitPrice', 'Unit Price is required').not().isEmpty(),
-      check('service', 'Service is required').not().isEmpty(),
-    ],
-  ],
-  async (req, res) => {
-    console.log('contract.put', req.params._id)
-    const contractid = req.params._id
-
-    const contract = await Contract.findById(contractid)
-
-    if (contract) {
-      contract.user = req.body.user
-      contract.transDate = req.body.transDate
-      contract.completeDate = req.body.completeDate
-      contract.description = req.body.description
-      contract.documents = req.body.documents
-      contract.comments = req.body.comments
-      contract.quantity = req.body.quantity
-      contract.unitPrice = req.body.unitPrice
-      contract.totalCost = req.body.totalCost
-      contract.isPaid = req.body.isPaid
-      contract.isCompleted = req.body.isCompleted
-      contract.service = req.body.service
-      contract.email = req.body.email
-      contract.telno = req.body.telno
-      contract.serviceEmail = req.body.serviceEmail
-
-      const updatedContract = await contract.save()
-      res.send({
-        message: 'Contract Updated',
-        contract: updatedContract,
-      })
-    } else {
-      res.status(404).send({ message: 'Contract Not Found' })
+      res.status(500).send('Server Error ooooooo')
     }
   },
 )
@@ -209,17 +185,25 @@ router.get('/:email', async (req, res) => {
   }
 })
 
+// Delete contract after expiration of contract.
 router.delete('/:id', async (req, res) => {
   console.log('in contractRouter.delete()', req.params.id)
   const contractid = req.params.id
 
-  const contract = await Contract.deleteOne({ _id: contractid })
-
-  if (contract) {
-    res.send(contract)
-  } else {
+  try {
+    const contract = await Contract.findOneAndRemove({ contractId: contractid })
+    res.send('Contract deleted')
+  } catch (error) {
     res.status(404).send({ message: 'Contract Not Found' })
   }
 })
+
+function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
 
 module.exports = router

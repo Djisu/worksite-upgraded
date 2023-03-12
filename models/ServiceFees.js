@@ -1,16 +1,15 @@
 const mongoose = require('mongoose')
 //var Schema = mongoose.Schema;
 
-const ServicefeesSchema = new mongoose.Schema(
-  {
-    servicename: { type: String, required: true },
-    serviceFees: { type: Number, required: true },
+const ServicefeesSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
   },
-  {
-    timestamps: true,
-  },
-)
+  servicefees: { type: Number, required: true },
+})
 
-const Servicefees = mongoose.model('servicefees', ServicefeesSchema)
+module.exports = Servicefees = mongoose.model('servicefees', ServicefeesSchema)
+// const Servicefees = mongoose.model('servicefees', ServicefeesSchema)
 
 // export default Servicefees

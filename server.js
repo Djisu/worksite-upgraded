@@ -24,6 +24,7 @@ app.use('/api/profile', require('./routes/api/profile'))
 app.use('/api/service', require('./routes/api/service'))
 app.use('/api/contract', require('./routes/api/contract'))
 app.use('/api/servicefees', require('./routes/api/servicefees'))
+app.use('/api/payment', require('./routes/api/payment'))
 
 const PORT = process.env.PORT || 5000
 //server connection

@@ -3,6 +3,7 @@ const router = express.Router()
 const auth = require('../../middleware/auth')
 const { check, validationResult } = require('express-validator')
 const Service = require('../../models/Service')
+const nodemailer = require('nodemailer')
 
 // @route  POST api/service
 // @desc   Test route
@@ -44,7 +45,8 @@ router.post(
       check('transDate', 'Transaction Date is required').not().isEmpty(),
       check('endDate', 'End Date is required').not().isEmpty(),
       check('serviceFees', 'Service Fees is required').not().isEmpty(),
-      check('units', 'Unitsis required').not().isEmpty(),
+      check('units', 'Units is required').not().isEmpty(),
+      check('location', 'Location is required').not().isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -54,6 +56,7 @@ router.post(
     }
 
     const {
+      serviceId,
       category,
       name,
       image,
@@ -65,12 +68,14 @@ router.post(
       endDate,
       serviceFees,
       units,
+      location,
     } = req.body
 
     // Build profile object
     const serviceFields = {}
     serviceFields.user = req.user.id
 
+    if (serviceId) serviceFields.serviceId = serviceId
     if (category) serviceFields.category = category
     if (name) serviceFields.name = name
     if (image) serviceFields.image - image
@@ -82,14 +87,19 @@ router.post(
     if (endDate) serviceFields.endDate = endDate
     if (serviceFees) serviceFields.serviceFees = serviceFees
     if (units) serviceFields.units = units
+    if (location) serviceFields.location = location
 
     try {
-      let service = await Service.findOne({ service: req.service.id })
+      // let service = await Service.findOne({
+      //   service: req.serviceId,
+      // })
+      let service = await Service.findById(req.serviceId)
 
       if (service) {
+        console.log('update')
         // Update old service
         service = await Service.findOneAndUpdate(
-          { service: req.service.id },
+          { service: req.serviceId },
           { $set: serviceFields },
           { new: true },
         )
@@ -97,39 +107,44 @@ router.post(
       }
 
       // Create new contract
+      let kofi = uuid()
+
+      console.log('kofi', kofi)
+      if (!kofi) {
+        return res.send('empty uuid')
+      }
+
+      serviceFields.serviceId = uuid()
+      // paymentFields.paymentId = uuid()
       service = new Service(serviceFields)
       await service.save()
 
-      //Email sending
-      var transporter = nodemailer.createTransport({
-        /* service: 'gmail', */
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-          user: user,
-          pass: pass,
-        },
-        tls: {
-          rejectUnauthorized: false,
-        },
-      })
+      // //Email sending
+      // var transporter = nodemailer.createTransport({
+      //   service: 'gmail',
+      //   host: 'smtp.gmail.com',
+      //   port: 587,
+      //   secure: false, // true for 465, false for other ports
+      //   auth: {
+      //     user: 'djesudjoleto@gmail.com',
+      //     pass: 'kijwikopmbypvyxj',
+      //   },
+      //   tls: {
+      //     rejectUnauthorized: false,
+      //   },
+      // })
+      // const mailOptions = {
+      //   from: 'djesudjoleto@gmail.com', // sender address
+      //   to: 'pfleischer2002@yahoo.co.uk', // list of receivers
+      //   subject: 'Service created', // Subject line
+      //   html: '<p>This is to inform you that your service is created.</p>', // plain text body
+      // }
+      // transporter.sendMail(mailOptions, function (err, info) {
+      //   if (err) console.log(err)
+      //   else console.log(info)
+      // })
 
-      var mailOptions = {
-        from: user,
-        to: req.body.serviceEmail,
-        subject: 'Service from ' + req.body.email,
-        text: req.body.description,
-      }
-
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log(error)
-        } else {
-          console.log('Email sent: ' + info.response)
-        }
-      })
-      //End of Email
+      // //End of Email
 
       return res.json(service)
     } catch (err) {
@@ -139,38 +154,16 @@ router.post(
   },
 )
 
-// @route  GET api/profile/user/:user_id
-// @desc   GET profile by user ID
-// @access Public
-// router.get('/user/:user_id', async (req, res) => {
-//   try {
-//     const profile = await Profile.findOne({
-//       user: req.params.user_id,
-//     }).populate('user', ['name', 'avatar'])
-
-//     if (!profile) return res.status(400).json({ msg: 'Profile not found' })
-
-//     res.json(profile)
-//   } catch (err) {
-//     console.error(err.message)
-
-//     if (err.kind == 'ObjectId') {
-//       return res.status(400).json({ msg: 'Profile not found' })
-//     }
-//     res.status(500).send('Server Error')
-//   }
-// })
-
 // @route  GET api/service/:id
 // @desc   GET service by service ID
 // @access Public
-router.get('/:email', async (req, res) => {
+router.get('/:id', async (req, res) => {
   console.log('service router.get')
 
   console.log('const service = await Service.find')
 
   const service = await Service.find({
-    email: req.params.email,
+    email: req.params.id,
     endDate: { $gt: new Date() },
   })
 
@@ -197,13 +190,19 @@ router.get('/:id', async (req, res) => {
 
 router.post('/:id/reviews', auth, async (req, res) => {
   const serviceId = req.params.id
-  const service = await Service.findById(serviceId)
+
+  console.log('serviceId: ', serviceId)
+  // const service = await Service.findById(serviceId)
+
+  const service = await Service.findOne({
+    service: req.params.id,
+  })
 
   if (service) {
     const review = {
       name: req.body.name,
-      rating: Number(req.body.rating),
       comment: req.body.comment,
+      rating: Number(req.body.rating),
     }
 
     service.reviews.push(review)
@@ -220,5 +219,14 @@ router.post('/:id/reviews', auth, async (req, res) => {
     res.status(404).send({ message: 'Service Not Found' })
   }
 })
+
+function uuid() {
+  console.log('in uuid')
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
 
 module.exports = router

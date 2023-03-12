@@ -17,9 +17,13 @@ const ServiceSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
     },
+    serviceId: {
+      type: String,
+      required: true,
+    },
     category: { type: String, required: true },
-    name: { type: String, required: true, unique: true },
-    image: { type: String },
+    name: { type: String, required: true },
+    image: { type: [String] },
     unitPrice: { type: Number, required: true },
     rating: { type: Number },
     numReviews: { type: Number },
@@ -28,15 +32,12 @@ const ServiceSchema = new mongoose.Schema(
     transDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     serviceFees: { type: Number },
-    units: { type: String, required: true },
+    units: { type: String },
+    location: { type: String, required: true },
   },
   {
     timestamps: true,
   },
 )
 
-const Service = mongoose.model('service', ServiceSchema)
-
-// export default Service
-
-//, unique: true , required: true
+module.exports = Service = mongoose.model('service', ServiceSchema)
