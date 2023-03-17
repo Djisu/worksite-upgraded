@@ -36,7 +36,32 @@ const ProfileSchema = new mongoose.Schema({
   bio: {
     type: String,
   },
-  isPaid: { type: Boolean, required: true, default: false },
+  images: { type: [String] },
+  transDate: { type: Date, required: true },
+  endDate: { type: Date, required: true },
+  location: { type: String, required: true },
+  comments: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+      },
+      text: {
+        type: String,
+        required: true,
+      },
+      name: {
+        type: String,
+      },
+      avatar: {
+        type: String,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
 })
 
 module.exports = Profile = mongoose.model('profile', ProfileSchema)

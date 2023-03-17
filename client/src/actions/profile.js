@@ -8,8 +8,8 @@ import {
   UPDATE_PROFILE,
   CLEAR_PROFILE,
   ACCOUNT_DELETED,
-  GET_REPOS,
-  NO_REPOS,
+  // GET_REPOS,
+  // NO_REPOS,
 } from './types'
 
 /*

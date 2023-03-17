@@ -25,8 +25,8 @@ const AddExperience = ({ addExperience }) => {
     <section className="container">
       <h1 className="large text-primary">Add An Experience</h1>
       <p className="lead">
-        <i className="fas fa-code-branch" /> Add any developer/programming
-        positions that you have had in the past
+        <i className="fas fa-code-branch" /> Add any positions that you have had
+        in the past
       </p>
       <small>* = required field</small>
       <form

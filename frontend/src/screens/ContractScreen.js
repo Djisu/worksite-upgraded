@@ -92,6 +92,7 @@ export default function ContractScreen(props) {
     }
   }, [props.history, redirect, userInfo]) //
 
+// submitHandler
   const submitHandler = (e) => {
     e.preventDefault()
 

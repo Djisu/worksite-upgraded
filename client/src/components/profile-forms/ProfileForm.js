@@ -1,8 +1,11 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useMatch, useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { createProfile, getCurrentProfile } from '../../actions/profile'
+import { storage } from '../../firebase'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 /*
   NOTE: declare initialState outside of component
@@ -15,13 +18,10 @@ const initialState = {
   location: '',
   status: '',
   skills: '',
-  githubusername: '',
   bio: '',
-  twitter: '',
-  facebook: '',
-  linkedin: '',
-  youtube: '',
-  instagram: '',
+  images: '',
+  // transDate: '',
+  // endDate: '',
 }
 
 const ProfileForm = ({
@@ -30,12 +30,29 @@ const ProfileForm = ({
   getCurrentProfile,
 }) => {
   const [formData, setFormData] = useState(initialState)
-
   const creatingProfile = useMatch('/create-profile')
+  // const [displaySocialInputs, toggleSocialInputs] = useState(false)
+  const [documents, setDocuments] = useState([])
 
-  const [displaySocialInputs, toggleSocialInputs] = useState(false)
+  const [endDate, setEndDate] = useState(new Date())
+  const [transDate, setTransDate] = useState(new Date())
 
   const navigate = useNavigate()
+
+  const state = {
+    button: 1,
+  }
+
+  // Image codes
+  const [image, setImage] = useState(null)
+  const [url, setUrl] = useState(null)
+  const [progress, setProgress] = useState(0)
+
+  const handleChange = (e) => {
+    if (e.target.files[0]) {
+      setImage(e.target.files[0])
+    }
+  }
 
   useEffect(() => {
     // if there is no profile, attempt to fetch one
@@ -48,9 +65,9 @@ const ProfileForm = ({
       for (const key in profile) {
         if (key in profileData) profileData[key] = profile[key]
       }
-      for (const key in profile.social) {
-        if (key in profileData) profileData[key] = profile.social[key]
-      }
+      // for (const key in profile.social) {
+      //   if (key in profileData) profileData[key] = profile.social[key]
+      // }
       // the skills may be an array from our API response
       if (Array.isArray(profileData.skills))
         profileData.skills = profileData.skills.join(', ')
@@ -61,28 +78,90 @@ const ProfileForm = ({
 
   const {
     company,
-    website,
-    location,
     status,
     skills,
-    githubusername,
     bio,
-    twitter,
-    facebook,
-    linkedin,
-    youtube,
-    instagram,
+    // images,
+    // transDate,
+    // endDate,
+    location,
   } = formData
 
-  const onChange = (e) =>
+  formData.endDate = endDate
+  formData.transDate = transDate
+
+  formData.images = documents
+
+  console.log('endDate: ', endDate)
+
+  const onChange = (e) => {
+    formData.transDate = new Date()
     setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   const onSubmit = (e) => {
     const editing = profile ? true : false
+
     e.preventDefault()
-    createProfile(formData, editing).then(() => {
-      if (!editing) navigate('/dashboard')
-    })
+
+    // Loading image with progress bar
+    if (state.button === 1) {
+      console.log('instate.button === 1 uploadImage')
+
+      const uploadTask = storage.ref(`images/${image.name}`).put(image)
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+          )
+          setProgress(progress)
+        },
+        (error) => {
+          console.log(error)
+        },
+        () => {
+          storage
+            .ref('images')
+            .child(image.name)
+            .getDownloadURL()
+            .then((url) => {
+              setUrl(url)
+            })
+        },
+      )
+
+      setFormData({ ...formData, images: documents })
+      // formData.images = documents
+      console.log('After waiting', documents)
+    }
+
+    // Adding image to list
+    if (state.button === 3) {
+      console.log('in state.button === 3')
+
+      if (
+        documents.includes(document.querySelector('img').src) !==
+        'http://via.placeholder.com/40X40'
+      ) {
+        setDocuments((documents) => [
+          ...documents,
+          document.querySelector('img').src,
+        ])
+        console.log('documents====', documents)
+      } else {
+        console.warn('document already selected. select another document')
+      }
+    }
+
+    // Adding form data to the database
+    if (state.button === 2) {
+      console.log('in state.button === 2 ', formData)
+
+      createProfile(formData, editing).then(() => {
+        if (!editing) navigate('/dashboard')
+      })
+    }
   }
 
   return (
@@ -96,6 +175,7 @@ const ProfileForm = ({
           ? ` Let's get some information to make your`
           : ' Add some changes to your profile'}
       </p>
+
       <small>* = required field</small>
       <form className="form" onSubmit={onSubmit}>
         <div className="form-group">
@@ -126,18 +206,7 @@ const ProfileForm = ({
             Could be your own company or one you work for
           </small>
         </div>
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Website"
-            name="website"
-            value={website}
-            onChange={onChange}
-          />
-          <small className="form-text">
-            Could be your own or a company website
-          </small>
-        </div>
+
         <div className="form-group">
           <input
             type="text"
@@ -147,7 +216,7 @@ const ProfileForm = ({
             onChange={onChange}
           />
           <small className="form-text">
-            City & state suggested (eg. Boston, MA)
+            City & suburb suggested (eg. Kaneshie, Accra)
           </small>
         </div>
         <div className="form-group">
@@ -159,20 +228,7 @@ const ProfileForm = ({
             onChange={onChange}
           />
           <small className="form-text">
-            Please use comma separated values (eg. HTML,CSS,JavaScript,PHP)
-          </small>
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Github Username"
-            name="githubusername"
-            value={githubusername}
-            onChange={onChange}
-          />
-          <small className="form-text">
-            If you want your latest repos and a Github link, include your
-            username
+            Please use comma separated values (eg. Painting, Plumbing,Carpentry)
           </small>
         </div>
         <div className="form-group">
@@ -184,81 +240,88 @@ const ProfileForm = ({
           />
           <small className="form-text">Tell us a little about yourself</small>
         </div>
-
-        <div className="my-2">
-          <button
-            onClick={() => toggleSocialInputs(!displaySocialInputs)}
-            type="button"
-            className="btn btn-light"
-          >
-            Add Social Network Links
-          </button>
-          <span>Optional</span>
+        <div>
+          <label>
+            When will Service End?
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => setEndDate(date)}
+            />
+          </label>
+          <label>
+            Select today's date
+            <DatePicker
+              selected={transDate}
+              onChange={(date) => setTransDate(date)}
+            />
+          </label>
         </div>
 
-        {displaySocialInputs && (
-          <Fragment>
-            <div className="form-group social-input">
-              <i className="fab fa-twitter fa-2x" />
-              <input
-                type="text"
-                placeholder="Twitter URL"
-                name="twitter"
-                value={twitter}
-                onChange={onChange}
-              />
-            </div>
+        <div>
+          <div>
+            <progress value={progress} max="100" />
+            <br />
+            <input
+              type="file"
+              placeholder="Select and drag image url here."
+              onChange={handleChange}
+              // value={images}
+            />
 
-            <div className="form-group social-input">
-              <i className="fab fa-facebook fa-2x" />
-              <input
-                type="text"
-                placeholder="Facebook URL"
-                name="facebook"
-                value={facebook}
-                onChange={onChange}
-              />
-            </div>
+            {/* <input
+              type="file"
+              placeholder="Select and drag image url here."
+              onChange={handleChange}
+            /> */}
 
-            <div className="form-group social-input">
-              <i className="fab fa-youtube fa-2x" />
-              <input
-                type="text"
-                placeholder="YouTube URL"
-                name="youtube"
-                value={youtube}
-                onChange={onChange}
-              />
-            </div>
+            <button
+              className="rimary my-1"
+              type="submit"
+              onClick={() => (state.button = 1)}
+            >
+              Upload Image
+            </button>
+            <br />
+            {url}
+            <br />
+            <button
+              className="primary my-1"
+              type="submit"
+              onClick={() => (state.button = 3)}
+            >
+              Add Image to Image List
+            </button>
+            <br />
+            <br />
+            <img
+              className="small"
+              src={url || 'http://via.placeholder.com/20'}
+              alt="firebase-images"
+            />
+            <br />
+            {/* Copy image link and paste it in upload work documents */}
+          </div>
+        </div>
 
-            <div className="form-group social-input">
-              <i className="fab fa-linkedin fa-2x" />
-              <input
-                type="text"
-                placeholder="Linkedin URL"
-                name="linkedin"
-                value={linkedin}
-                onChange={onChange}
-              />
-            </div>
-
-            <div className="form-group social-input">
-              <i className="fab fa-instagram fa-2x" />
-              <input
-                type="text"
-                placeholder="Instagram URL"
-                name="instagram"
-                value={instagram}
-                onChange={onChange}
-              />
-            </div>
-          </Fragment>
-        )}
-
-        <input type="submit" className="btn btn-primary my-1" />
-        <Link className="btn btn-light my-1" to="/dashboard">
+        {/* <input type="submit" className="primary my-1" /> */}
+        <Link to="/dashboard" className="primary m-3">
           Go Back
         </Link>
+        <br />
+        <button
+          className="primary my-1"
+          type="submit"
+          onClick={() => (state.button = 2)}
+        >
+          Edit Profile
+        </button>
+
+        <div>
+          <h4>Documents List:</h4>
+          {documents.map((document) => (
+            <p key={document}>{document}</p>
+          ))}
+        </div>
       </form>
     </section>
   )
