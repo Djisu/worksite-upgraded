@@ -19,7 +19,7 @@ const ProfileTop = ({
         {status} {company ? <span> at {company}</span> : null}
       </p>
       <p>{location ? <span>{location}</span> : null}</p>
-      <div className="icons my-1">
+      {/* <div className="icons my-1">
         {website ? (
           <a href={website} target="_blank" rel="noopener noreferrer">
             <i className="fas fa-globe fa-2x" />
@@ -39,7 +39,7 @@ const ProfileTop = ({
                 </a>
               ))
           : null}
-      </div>
+      </div> */}
     </div>
   )
 }

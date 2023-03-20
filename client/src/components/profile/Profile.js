@@ -8,6 +8,9 @@ import ProfileAbout from './ProfileAbout'
 import ProfileExperience from './ProfileExperience'
 // import ProfileEducation from './ProfileEducation'
 // import ProfileGithub from './ProfileGithub'
+
+import CommentForm from './CommentForm'
+import CommentItem from './CommentItem'
 import { getProfileById } from '../../actions/profile'
 
 const Profile = ({ getProfileById, profile: { profile }, auth }) => {
@@ -25,6 +28,7 @@ const Profile = ({ getProfileById, profile: { profile }, auth }) => {
           <Link to="/profiles" className="btn btn-light">
             Back To Profiles
           </Link>
+
           {auth.isAuthenticated &&
             auth.loading === false &&
             auth.user._id === profile.user._id && (
@@ -32,6 +36,7 @@ const Profile = ({ getProfileById, profile: { profile }, auth }) => {
                 Edit Profile
               </Link>
             )}
+
           <div className="profile-grid my-1">
             <ProfileTop profile={profile} />
             <ProfileAbout profile={profile} />
@@ -49,27 +54,17 @@ const Profile = ({ getProfileById, profile: { profile }, auth }) => {
               ) : (
                 <h4>No experience credentials</h4>
               )}
+
+              <CommentForm user={profile.user._id} />
+              <div className="comments">
+                {profile.comments.map((comment) => (
+                  <CommentItem
+                    key={comment._id}
+                    comment={comment}
+                  />
+                ))}
+              </div>
             </div>
-
-            {/* <div className="profile-edu bg-white p-2">
-              <h2 className="text-primary">Education</h2>
-              {profile.education.length > 0 ? (
-                <Fragment>
-                  {profile.education.map((education) => (
-                    <ProfileEducation
-                      key={education._id}
-                      education={education}
-                    />
-                  ))}
-                </Fragment>
-              ) : (
-                <h4>No education credentials</h4>
-              )}
-            </div> */}
-
-            {/* {profile.githubusername && (
-              <ProfileGithub username={profile.githubusername} />
-            )} */}
           </div>
         </Fragment>
       )}

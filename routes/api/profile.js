@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const auth = require('../../middleware/auth')
 const { check, validationResult } = require('express-validator')
+const normalize = require('normalize-url')
+const checkObjectId = require('../../middleware/checkObjectId')
 
 const Profile = require('../../models/Profile')
 const User = require('../../models/User')
@@ -254,13 +256,17 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
 })
 
 // @route  POST api/profile/comment/:id
-// @desc   Comment on a post
+// @desc   Comment on a profile
 // @access Private
 router.post(
   '/comment/:id',
-  [auth, [check('text', 'Text is required').not().isEmpty()]],
+  auth,
+  checkObjectId('id'),
+  check('text', 'Text is required').notEmpty(),
   async (req, res) => {
     const errors = validationResult(req)
+
+    console.log('in router.post(/comment/:id', req.params.id)
 
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() })
@@ -268,7 +274,9 @@ router.post(
 
     try {
       const user = await User.findById(req.user.id).select('-password')
-      const post = await Post.findById(req.params.id)
+      let profile = await Profile.findOne({ user: req.params.id })
+
+      // console.log('profile:', profile)
 
       const newComment = {
         text: req.body.text,
@@ -277,11 +285,15 @@ router.post(
         user: req.user.id,
       }
 
-      post.comments.unshift(newComment)
+      profile.comments instanceof Array
+        ? profile.comments.unshift(newComment)
+        : (profile.comments = [newComment])
 
-      await post.save()
+      console.log('profile.comments:', profile.comments)
 
-      res.json(post.comments)
+      await profile.save()
+
+      res.json(profile.comments)
     } catch (err) {
       console.log(err.message)
       res.status(500).send('Server Error')
@@ -294,12 +306,21 @@ router.post(
 // @access Private
 router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id)
+    //console.log('in router.delete(/comment/:id/:comment_id')
+    console.log('req.params.comment_id:', req.params.comment_id)
+
+    let user = await User.findById(req.user.id).select('-password')
+
+    console.log('user:', user)
+    let profile = await Profile.findOne({ user: req.user.id })
+
+    console.log('req.params:', req.params)
 
     // Pull out comment
-    const comment = await post.comments.find(
+    const comment = await profile.comments.find(
       (comment) => comment.id === req.params.comment_id,
     )
+    console.log('comment:', comment)
 
     // Make sure comment exists
     if (!comment) {
@@ -312,14 +333,14 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     }
 
     // Get the removed index
-    const removeIndex = post.comments
+    const removeIndex = profile.comments
       .map((comment) => comment.user.toString())
       .indexOf(req.user.id)
 
-    post.comments.splice(removeIndex, 1)
+    profile.comments.splice(removeIndex, 1)
 
-    await post.save()
-    res.json(post.comments)
+    await profile.save()
+    res.json(profile.comments)
   } catch (err) {
     console.log(err.message)
     res.status(500).send('Server Error')

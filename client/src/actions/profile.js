@@ -8,8 +8,9 @@ import {
   UPDATE_PROFILE,
   CLEAR_PROFILE,
   ACCOUNT_DELETED,
-  // GET_REPOS,
-  // NO_REPOS,
+  ADD_COMMENT,
+  REMOVE_COMMENT,
+  POST_ERROR,
 } from './types'
 
 /*
@@ -72,22 +73,6 @@ export const getProfileById = (userId) => async (dispatch) => {
   }
 }
 
-// Get Github repos
-// export const getGithubRepos = (username) => async (dispatch) => {
-//   try {
-//     const res = await api.get(`/profile/github/${username}`)
-
-//     dispatch({
-//       type: GET_REPOS,
-//       payload: res.data,
-//     })
-//   } catch (err) {
-//     dispatch({
-//       type: NO_REPOS,
-//     })
-//   }
-// }
-
 // Create or update profile
 export const createProfile = (formData, edit = false) => async (dispatch) => {
   try {
@@ -139,32 +124,6 @@ export const addExperience = (formData) => async (dispatch) => {
   }
 }
 
-// Add Education
-// export const addEducation = (formData) => async (dispatch) => {
-//   try {
-//     const res = await api.put('/profile/education', formData)
-
-//     dispatch({
-//       type: UPDATE_PROFILE,
-//       payload: res.data,
-//     })
-
-//     dispatch(setAlert('Education Added', 'success'))
-//     return res.data
-//   } catch (err) {
-//     const errors = err.response.data.errors
-
-//     if (errors) {
-//       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')))
-//     }
-
-//     dispatch({
-//       type: PROFILE_ERROR,
-//       payload: { msg: err.response.statusText, status: err.response.status },
-//     })
-//   }
-// }
-
 // Delete experience
 export const deleteExperience = (id) => async (dispatch) => {
   try {
@@ -184,25 +143,6 @@ export const deleteExperience = (id) => async (dispatch) => {
   }
 }
 
-// Delete education
-// export const deleteEducation = (id) => async (dispatch) => {
-//   try {
-//     const res = await api.delete(`/profile/education/${id}`)
-
-//     dispatch({
-//       type: UPDATE_PROFILE,
-//       payload: res.data,
-//     })
-
-//     dispatch(setAlert('Education Removed', 'success'))
-//   } catch (err) {
-//     dispatch({
-//       type: PROFILE_ERROR,
-//       payload: { msg: err.response.statusText, status: err.response.status },
-//     })
-//   }
-// }
-
 // Delete account & profile
 export const deleteAccount = () => async (dispatch) => {
   if (window.confirm('Are you sure? This can NOT be undone!')) {
@@ -219,5 +159,49 @@ export const deleteAccount = () => async (dispatch) => {
         payload: { msg: err.response.statusText, status: err.response.status },
       })
     }
+  }
+}
+
+// Add comment
+export const addComment = (userId, formData) => async (dispatch) => {
+  try {
+    console.log('in addComments', userId, formData)
+
+    const res = await api.post(`/profile/comment/${userId}`, formData)
+
+    console.log('after api.post(/profile/comment, formData)')
+
+    dispatch({
+      type: ADD_COMMENT,
+      payload: res.data,
+    })
+
+    dispatch(setAlert('Comment Added', 'success'))
+  } catch (err) {
+    dispatch({
+      type: POST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    })
+  }
+}
+
+// Delete comment
+export const deleteComment = (userId, commentId) => async (dispatch) => {
+  try {
+    console.log('commentId:', commentId)
+
+    await api.delete(`/profile/comment/${userId}/${commentId}`)
+
+    dispatch({
+      type: REMOVE_COMMENT,
+      payload: commentId,
+    })
+
+    dispatch(setAlert('Comment Removed', 'success'))
+  } catch (err) {
+    dispatch({
+      type: POST_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    })
   }
 }
