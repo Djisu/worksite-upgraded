@@ -92,8 +92,6 @@ const ProfileForm = ({
 
   formData.images = documents
 
-  console.log('endDate: ', endDate)
-
   const onChange = (e) => {
     formData.transDate = new Date()
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -275,11 +273,11 @@ const ProfileForm = ({
             /> */}
 
             <button
-              className="rimary my-1"
+              className="primary my-1"
               type="submit"
               onClick={() => (state.button = 1)}
             >
-              Upload Image
+              Upload Your Photo
             </button>
             <br />
             {url}
@@ -304,18 +302,19 @@ const ProfileForm = ({
         </div>
 
         {/* <input type="submit" className="primary my-1" /> */}
-        <Link to="/dashboard" className="primary m-3">
-          Go Back
-        </Link>
-        <br />
-        <button
-          className="primary my-1"
-          type="submit"
-          onClick={() => (state.button = 2)}
-        >
-          Edit Profile
-        </button>
-
+        <div>
+          <Link to="/dashboard" className="primary m-3">
+            Go Back
+          </Link>
+          <br />
+          <button
+            className="primary my-1"
+            type="submit"
+            onClick={() => (state.button = 2)}
+          >
+            Edit Profile
+          </button>
+        </div>
         <div>
           <h4>Documents List:</h4>
           {documents.map((document) => (
