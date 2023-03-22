@@ -22,6 +22,7 @@ const initialState = {
   images: '',
   // transDate: '',
   // endDate: '',
+  telno: '',
 }
 
 const ProfileForm = ({
@@ -85,6 +86,7 @@ const ProfileForm = ({
     // transDate,
     // endDate,
     location,
+    telno,
   } = formData
 
   formData.endDate = endDate
@@ -203,6 +205,16 @@ const ProfileForm = ({
           <small className="form-text">
             Could be your own company or one you work for
           </small>
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Mobile Phone Number"
+            name="telno"
+            value={telno}
+            onChange={onChange}
+          />
+          <small className="form-text">Your Mobile Phone Number</small>
         </div>
 
         <div className="form-group">

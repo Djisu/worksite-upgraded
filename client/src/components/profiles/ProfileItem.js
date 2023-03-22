@@ -10,6 +10,7 @@ const ProfileItem = ({
     location,
     skills,
     images,
+    telno,
   },
 }) => {
   return (
@@ -18,6 +19,7 @@ const ProfileItem = ({
       {!avatar && <img src={images[0]} alt="" className="round-img" />}
       <div>
         <h2>{name}</h2>
+        <p>{telno}</p>
         <p>
           {status} {company && <span> at {company}</span>}
         </p>

@@ -39,6 +39,7 @@ const ProfileSchema = new Schema({
   transDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   location: { type: String, required: true },
+  telno: { type: String, required: true },
   comments: [
     {
       user: {

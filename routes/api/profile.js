@@ -45,6 +45,7 @@ router.post(
       check('skills', 'Skills is required').not().isEmpty(),
       check('endDate', 'Endding date is required').not().isEmpty(),
       check('bio', 'bio is required').not().isEmpty(),
+      check('telno', 'Telephone number is required').not().isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -62,6 +63,7 @@ router.post(
       transDate,
       endDate,
       location,
+      telno
     } = req.body
 
     console.log(
@@ -74,6 +76,7 @@ router.post(
       transDate,
       endDate,
       location,
+      telno
     )
 
     // Build profile object
@@ -94,6 +97,7 @@ router.post(
     if (endDate) profileFields.endDate = endDate
 
     if (location) profileFields.location = location
+    if (telno) profileFields.telno = telno
 
     try {
       let profile = await Profile.findOne({ user: req.user.id })
