@@ -63,21 +63,8 @@ router.post(
       transDate,
       endDate,
       location,
-      telno
+      telno,
     } = req.body
-
-    console.log(
-      'The profile:',
-      company,
-      status,
-      skills,
-      bio,
-      images,
-      transDate,
-      endDate,
-      location,
-      telno
-    )
 
     // Build profile object
     const profileFields = {}

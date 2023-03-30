@@ -24,9 +24,6 @@ const CommentForm = ({ userid, auth, addComment }) => {
         className="form my-1"
         onSubmit={(e) => {
           e.preventDefault()
-
-          console.log('in onSubmit;', id, { text })
-
           addComment(id, { text })
           setText('')
         }}

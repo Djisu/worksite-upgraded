@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { logout } from '../../actions/auth'
+import SearchText from './SearchText'
 
 const Navbar = ({ auth: { isAuthenticated }, logout }) => {
   const authLinks = (
@@ -31,8 +32,12 @@ const Navbar = ({ auth: { isAuthenticated }, logout }) => {
   const guestLinks = (
     <ul>
       <li>
+        <SearchText />
+      </li>
+      <li>
         <Link to="/profiles">Artisans</Link>
       </li>
+
       <li>
         <Link to="/register">Register</Link>
       </li>
