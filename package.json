@@ -32,7 +32,45 @@
     "concurrently": "^7.6.0",
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-react": "^7.32.2",
     "nodemon": "^2.0.20",
     "prettier": "2.8.7"
+  },
+  "eslintConfig": {
+    "rules": {
+      "indent": "off",
+      "react/jsx-indent": [
+        "warn",
+        4,
+        {
+          "checkAttributes": true
+        }
+      ],
+      "react/react-in-jsx-scope": "off",
+      "react/destructuring-assignment": "off",
+      "no-nested-ternary": "warn",
+      "react/prop-types": "warn",
+      "semi": [
+        "error",
+        "always",
+        {
+          "omitLastInOneLineBlock": false
+        }
+      ],
+      "semi-style": [
+        "error",
+        "last"
+      ],
+      "no-extra-semi": [
+        "error"
+      ],
+      "semi-spacing": [
+        "error",
+        {
+          "before": false,
+          "after": true
+        }
+      ]
+    }
   }
 }
