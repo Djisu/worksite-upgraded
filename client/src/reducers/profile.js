@@ -8,7 +8,7 @@ import {
   NO_REPOS,
   ADD_COMMENT,
   REMOVE_COMMENT,
-} from '../actions/types'
+} from '../actions/types';
 
 const initialState = {
   profile: null,
@@ -16,10 +16,10 @@ const initialState = {
   repos: [],
   loading: true,
   error: {},
-}
+};
 
 function profileReducer(state = initialState, action) {
-  const { type, payload } = action
+  const { type, payload } = action;
 
   switch (type) {
     case GET_PROFILE:
@@ -28,59 +28,59 @@ function profileReducer(state = initialState, action) {
         ...state,
         profile: payload,
         loading: false,
-      }
+      };
     case GET_PROFILES:
       return {
         ...state,
         profiles: payload,
         loading: false,
-      }
+      };
     case PROFILE_ERROR:
       return {
         ...state,
         error: payload,
         loading: false,
         profile: null,
-      }
+      };
     case CLEAR_PROFILE:
       return {
         ...state,
         profile: null,
         repos: [],
-      }
+      };
     case GET_REPOS:
       return {
         ...state,
         repos: payload,
         loading: false,
-      }
+      };
     case NO_REPOS:
       return {
         ...state,
         repos: [],
-      }
+      };
 
     case ADD_COMMENT:
       return {
         ...state,
         profile: { ...state.profile, comments: payload },
         loading: false,
-      }
+      };
     case REMOVE_COMMENT:
       return {
         ...state,
         profile: {
           ...state.profile,
           comments: state.profile.comments.filter(
-            (comment) => comment._id !== payload,
+            (comment) => comment._id !== payload
           ),
         },
         loading: false,
-      }
+      };
 
     default:
-      return state
+      return state;
   }
 }
 
-export default profileReducer
+export default profileReducer;

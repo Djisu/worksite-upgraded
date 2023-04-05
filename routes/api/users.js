@@ -1,3 +1,4 @@
+/* eslint-disable semi */
 const express = require('express')
 const router = express.Router()
 const gravatar = require('gravatar')
@@ -36,7 +37,7 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() })
     }
-    const { name, email, password, avatar, date } = req.body
+    const { name, email, password } = req.body
 
     try {
       // See if users exists
@@ -61,7 +62,6 @@ router.post(
         email,
         password,
         avatar,
-        date,
       })
 
       // Encript password
@@ -80,7 +80,7 @@ router.post(
       jwt.sign(
         payload,
         config.get('jwtSecret'),
-        { expiresIn: 360000 },
+        { expiresIn: '5 days' },
         (err, token) => {
           if (err) throw err
 
@@ -90,7 +90,9 @@ router.post(
 
       // res.send('User registered')
     } catch (err) {
+      // eslint-disable-next-line
       console.log(err.message)
+      // eslint-disable-next-line
       res.status(500).send('Server error')
     }
   },

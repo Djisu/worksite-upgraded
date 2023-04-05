@@ -1,33 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 //import { render } from 'react-dom'
-import { storage } from '../firebase'
+import { storage } from '../firebase';
 
 const FileUpload = () => {
-  const [image, setImage] = useState(null)
-  const [url, setUrl] = useState(null)
-  const [progress, setProgress] = useState(0)
+  const [image, setImage] = useState(null);
+  const [url, setUrl] = useState(null);
+  const [progress, setProgress] = useState(0);
 
   const handleChange = (e) => {
-    console.log('in handleChange')
+    console.log('in handleChange');
     if (e.target.files[0]) {
-      setImage(e.target.files[0])
+      setImage(e.target.files[0]);
     }
-  }
+  };
 
   const handleUpload = () => {
-    console.log('in handleupload')
+    console.log('in handleupload');
 
-    const uploadTask = storage.ref(`images/${image.name}`).put(image)
+    const uploadTask = storage.ref(`images/${image.name}`).put(image);
     uploadTask.on(
       'state_changed',
       (snapshot) => {
         const progress = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
-        )
-        setProgress(progress)
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setProgress(progress);
       },
       (error) => {
-        console.log(error)
+        console.log(error);
       },
       () => {
         storage
@@ -35,17 +35,17 @@ const FileUpload = () => {
           .child(image.name)
           .getDownloadURL()
           .then((url) => {
-            setUrl(url)
-          })
-      },
-    )
+            setUrl(url);
+          });
+      }
+    );
 
-    return image
-  }
+    return image;
+  };
 
   useEffect(() => {
-    console.log('image: ', image)
-  })
+    console.log('image: ', image);
+  });
 
   //  const imgSrc = document.querySelector('medium')
   //   const srcx = imgSrc.src
@@ -68,7 +68,7 @@ const FileUpload = () => {
       <br />
       Select image link and drag it into 'Upload the image for your service'
     </div>
-  )
-}
-export default FileUpload //.handleUpload()
+  );
+};
+export default FileUpload; //.handleUpload()
 //render(<ReactFirebaseFileUpload />, document.querySelector('#root')){/* {srcx} */}

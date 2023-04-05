@@ -2,13 +2,13 @@
 // Bring in PropTypes
 // Bring in connect
 // Bring in the action
-import React, { Fragment, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import Spinner from '../layout/Spinner'
-import DashboardActions from './DashboardActions'
-import { getCurrentProfile } from '../../actions/profile'
+import React, { Fragment, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import Spinner from '../layout/Spinner';
+import DashboardActions from './DashboardActions';
+import { getCurrentProfile } from '../../actions/profile';
 
 // Destructure props
 const Dashboard = ({
@@ -20,8 +20,8 @@ const Dashboard = ({
 
   // useEffect, call the action to run once
   useEffect(() => {
-    getCurrentProfile()
-  }, [])
+    getCurrentProfile();
+  }, []);
 
   return loading && profile === null ? (
     <Spinner />
@@ -47,8 +47,8 @@ const Dashboard = ({
         </Fragment>
       )}
     </Fragment>
-  )
-}
+  );
+};
 
 // getCurrentProfile: a function to retrieve the profile: an action
 // auth: auth is needed for authentication
@@ -57,13 +57,13 @@ Dashboard.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
-}
+};
 
 // mapStateToProps to select the needed portion of the state
 const mapStateToProps = (state) => ({
   auth: state.auth,
   profile: state.profile,
-})
+});
 
 // Wrap connect around mapStateToProps and the action. Then component name
-export default connect(mapStateToProps, { getCurrentProfile })(Dashboard)
+export default connect(mapStateToProps, { getCurrentProfile })(Dashboard);

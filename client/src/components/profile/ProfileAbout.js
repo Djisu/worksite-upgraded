@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react'
-import PropTypes from 'prop-types'
+import React, { Fragment } from 'react';
+import PropTypes from 'prop-types';
 
 const ProfileAbout = ({
   profile: {
@@ -25,10 +25,10 @@ const ProfileAbout = ({
       ))}
     </div>
   </div>
-)
+);
 
 ProfileAbout.propTypes = {
   profile: PropTypes.object.isRequired,
-}
+};
 
-export default ProfileAbout
+export default ProfileAbout;

@@ -1,7 +1,7 @@
-import { combineReducers } from 'redux'
-import alert from './alert'
-import auth from './auth'
-import profile from './profile'
+import { combineReducers } from 'redux';
+import alert from './alert';
+import auth from './auth';
+import profile from './profile';
 // import post from './post'
 
 export default combineReducers({
@@ -9,4 +9,4 @@ export default combineReducers({
   auth,
   profile,
   // post,
-})
+});

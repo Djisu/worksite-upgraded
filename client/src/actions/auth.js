@@ -1,5 +1,5 @@
-import api from '../utils/api'
-import { setAlert } from './alert'
+import api from '../utils/api';
+import { setAlert } from './alert';
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -8,7 +8,10 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-} from './types'
+  USER_LIST_REQUEST,
+  USER_LIST_SUCCESS,
+  USER_LIST_FAIL,
+} from './types';
 
 /*
   NOTE: we don't need a config object for axios as the
@@ -20,71 +23,94 @@ import {
 // Load User
 export const loadUser = () => async (dispatch) => {
   try {
-    const res = await api.get('/auth')
+    const res = await api.get('/auth');
 
-    console.log('in loadUser!!!!', res)
+    console.log('in loadUser!!!!', res);
 
     dispatch({
       type: USER_LOADED,
       payload: res.data,
-    })
+    });
   } catch (err) {
     dispatch({
       type: AUTH_ERROR,
-    })
+    });
   }
-}
+};
 
 // Register User
 export const register = (formData) => async (dispatch) => {
   try {
-    const res = await api.post('/users', formData)
+    const res = await api.post('/users', formData);
 
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data,
-    })
-    dispatch(loadUser())
+    });
+    dispatch(loadUser());
   } catch (err) {
-    const errors = err.response.data.errors
+    const errors = err.response.data.errors;
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')))
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
 
     dispatch({
       type: REGISTER_FAIL,
-    })
+    });
   }
-}
+};
 
 // Login User
 export const login = (email, password) => async (dispatch) => {
-  const body = { email, password }
+  const body = { email, password };
 
   try {
-    const res = await api.post('/auth', body)
+    const res = await api.post('/auth', body);
 
-    console.log('res.data:', res.data)
+    console.log('res.data:', res.data);
 
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
-    })
+    });
 
-    dispatch(loadUser())
+    dispatch(loadUser());
   } catch (err) {
-    const errors = err.response.data.errors
+    const errors = err.response.data.errors;
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')))
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
 
     dispatch({
       type: LOGIN_FAIL,
-    })
+    });
   }
-}
+};
 
 // Logout
-export const logout = () => ({ type: LOGOUT })
+export const logout = () => ({ type: LOGOUT });
+
+export const listUsers = () => async (dispatch, getState) => {
+  dispatch({ type: USER_LIST_REQUEST });
+  try {
+    const {
+      userSignin: { userInfo },
+    } = getState();
+    const { data } = await api.get('/users', {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    });
+
+    //const res = await api.get('/auth');
+    dispatch({ type: USER_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({ type: USER_LIST_FAIL, payload: message });
+  }
+};

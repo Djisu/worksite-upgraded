@@ -1,10 +1,10 @@
 // Bring in React, useState, connect, Link, Navigate,
-import React, { useState } from 'react'
-import { connect } from 'react-redux'
-import { Link, Navigate } from 'react-router-dom' //Link for routes, Navigate for redirecting to different page
-import { setAlert } from '../../actions/alert' //setAlert for notification
-import { register } from '../../actions/auth' //action to post formdata to the backend
-import PropTypes from 'prop-types'
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { Link, Navigate } from 'react-router-dom'; //Link for routes, Navigate for redirecting to different page
+import { setAlert } from '../../actions/alert'; //setAlert for notification
+import { register } from '../../actions/auth'; //action to post formdata to the backend
+import PropTypes from 'prop-types';
 
 // isAuthenticated from the state, from the reducer. It is in the state so it found everywhere
 const Register = ({ setAlert, register, isAuthenticated }) => {
@@ -14,29 +14,29 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
     email: '',
     password: '',
     password2: '',
-  })
+  });
 
   // Destructure formData retrived from the screen to the local state
-  const { name, email, password, password2 } = formData
+  const { name, email, password, password2 } = formData;
 
   // Update local state with the formData when you move from one inputbox to another
   const onChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   // Submit calls the action to send form data to backend, and supply the action with the form data from the screen.
   const onSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (password !== password2) {
-      setAlert('Passwords do not match', 'danger')
+      setAlert('Passwords do not match', 'danger');
     } else {
-      register({ name, email, password })
+      register({ name, email, password });
     }
-  }
+  };
 
   // When user is authenticated, the user is redirected to the dashboard
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" />
+    return <Navigate to="/dashboard" />;
   }
 
   return (
@@ -97,19 +97,19 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
         Already have an account? <Link to="/login">Sign In</Link>
       </p>
     </section>
-  )
-}
+  );
+};
 // React.js type checking to avoid mistakes
 Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
-}
+};
 
 // A small porting of state is retrieved to check if user is authenticated or not.
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
-})
+});
 
 // connect binds state and functions to the component
-export default connect(mapStateToProps, { setAlert, register })(Register)
+export default connect(mapStateToProps, { setAlert, register })(Register);

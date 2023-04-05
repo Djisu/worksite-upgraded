@@ -1,6 +1,6 @@
-import axios from 'axios'
-import store from '../store'
-import { LOGOUT } from '../actions/types'
+import axios from 'axios';
+import store from '../store';
+import { LOGOUT } from '../actions/types';
 
 // Create an instance of axios
 const api = axios.create({
@@ -8,7 +8,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-})
+});
 /*
   NOTE: intercept any error responses from the api
  and check if the token is no longer valid.
@@ -23,10 +23,10 @@ api.interceptors.response.use(
     // console.log('api.interceptors.response', err)
 
     if (err.response.status === 401) {
-      store.dispatch({ type: LOGOUT })
+      store.dispatch({ type: LOGOUT });
     }
-    return Promise.reject(err)
-  },
-)
+    return Promise.reject(err);
+  }
+);
 
-export default api
+export default api;

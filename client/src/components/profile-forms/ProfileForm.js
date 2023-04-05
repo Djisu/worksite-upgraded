@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useMatch, useNavigate } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { createProfile, getCurrentProfile } from '../../actions/profile'
-import { storage } from '../../firebase'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
+import React, { useState, useEffect } from 'react';
+import { Link, useMatch, useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { createProfile, getCurrentProfile } from '../../actions/profile';
+import { storage } from '../../firebase';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 /*
   NOTE: declare initialState outside of component
@@ -23,59 +23,61 @@ const initialState = {
   // transDate: '',
   // endDate: '',
   telno: '',
-}
+  name: '',
+  avatar: '',
+};
 
 const ProfileForm = ({
   profile: { profile, loading },
   createProfile,
   getCurrentProfile,
 }) => {
-  const [formData, setFormData] = useState(initialState)
-  const creatingProfile = useMatch('/create-profile')
+  const [formData, setFormData] = useState(initialState);
+  const creatingProfile = useMatch('/create-profile');
   // const [displaySocialInputs, toggleSocialInputs] = useState(false)
-  const [documents, setDocuments] = useState([])
+  const [documents, setDocuments] = useState([]);
 
-  const [endDate, setEndDate] = useState(new Date())
-  const [transDate, setTransDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(new Date());
+  const [transDate, setTransDate] = useState(new Date());
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const state = {
     button: 1,
-  }
+  };
 
   // Image codes
-  const [image, setImage] = useState(null)
-  const [url, setUrl] = useState(null)
-  const [progress, setProgress] = useState(0)
+  const [image, setImage] = useState(null);
+  const [url, setUrl] = useState(null);
+  const [progress, setProgress] = useState(0);
 
   const handleChange = (e) => {
     if (e.target.files[0]) {
-      setImage(e.target.files[0])
+      setImage(e.target.files[0]);
     }
-  }
+  };
 
   useEffect(() => {
     // if there is no profile, attempt to fetch one
-    if (!profile) getCurrentProfile()
+    if (!profile) getCurrentProfile();
 
     // if we finished loading and we do have a profile
     // then build our profileData
     if (!loading && profile) {
-      const profileData = { ...initialState }
+      const profileData = { ...initialState };
       for (const key in profile) {
-        if (key in profileData) profileData[key] = profile[key]
+        if (key in profileData) profileData[key] = profile[key];
       }
       // for (const key in profile.social) {
       //   if (key in profileData) profileData[key] = profile.social[key]
       // }
       // the skills may be an array from our API response
       if (Array.isArray(profileData.skills))
-        profileData.skills = profileData.skills.join(', ')
+        profileData.skills = profileData.skills.join(', ');
       // set local state with the profileData
-      setFormData(profileData)
+      setFormData(profileData);
     }
-  }, [loading, getCurrentProfile, profile])
+  }, [loading, getCurrentProfile, profile]);
 
   const {
     company,
@@ -87,38 +89,40 @@ const ProfileForm = ({
     // endDate,
     location,
     telno,
-  } = formData
+    //name,
+    //avatar,
+  } = formData;
 
-  formData.endDate = endDate
-  formData.transDate = transDate
+  formData.endDate = endDate;
+  formData.transDate = transDate;
 
-  formData.images = documents
+  formData.images = documents;
 
   const onChange = (e) => {
-    formData.transDate = new Date()
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+    formData.transDate = new Date();
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const onSubmit = (e) => {
-    const editing = profile ? true : false
+    const editing = profile ? true : false;
 
-    e.preventDefault()
+    e.preventDefault();
 
     // Loading image with progress bar
     if (state.button === 1) {
-      console.log('instate.button === 1 uploadImage')
+      console.log('instate.button === 1 uploadImage');
 
-      const uploadTask = storage.ref(`images/${image.name}`).put(image)
+      const uploadTask = storage.ref(`images/${image.name}`).put(image);
       uploadTask.on(
         'state_changed',
         (snapshot) => {
           const progress = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
-          )
-          setProgress(progress)
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setProgress(progress);
         },
         (error) => {
-          console.log(error)
+          console.log(error);
         },
         () => {
           storage
@@ -126,19 +130,19 @@ const ProfileForm = ({
             .child(image.name)
             .getDownloadURL()
             .then((url) => {
-              setUrl(url)
-            })
-        },
-      )
+              setUrl(url);
+            });
+        }
+      );
 
-      setFormData({ ...formData, images: documents })
+      setFormData({ ...formData, images: documents });
       // formData.images = documents
-      console.log('After waiting', documents)
+      console.log('After waiting', documents);
     }
 
     // Adding image to list
     if (state.button === 3) {
-      console.log('in state.button === 3')
+      console.log('in state.button === 3');
 
       if (
         documents.includes(document.querySelector('img').src) !==
@@ -147,22 +151,22 @@ const ProfileForm = ({
         setDocuments((documents) => [
           ...documents,
           document.querySelector('img').src,
-        ])
-        console.log('documents====', documents)
+        ]);
+        console.log('documents====', documents);
       } else {
-        console.warn('document already selected. select another document')
+        console.warn('document already selected. select another document');
       }
     }
 
     // Adding form data to the database
     if (state.button === 2) {
-      console.log('in state.button === 2 ', formData)
+      console.log('in state.button === 2 ', formData);
 
       createProfile(formData, editing).then(() => {
-        if (!editing) navigate('/dashboard')
-      })
+        if (!editing) navigate('/dashboard');
+      });
     }
-  }
+  };
 
   return (
     <section className="container">
@@ -335,19 +339,19 @@ const ProfileForm = ({
         </div>
       </form>
     </section>
-  )
-}
+  );
+};
 
 ProfileForm.propTypes = {
   createProfile: PropTypes.func.isRequired,
   getCurrentProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   profile: state.profile,
-})
+});
 
 export default connect(mapStateToProps, { createProfile, getCurrentProfile })(
-  ProfileForm,
-)
+  ProfileForm
+);

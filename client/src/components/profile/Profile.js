@@ -1,23 +1,26 @@
-import React, { Fragment, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { Link, useParams } from 'react-router-dom'
-import { connect } from 'react-redux'
-import Spinner from '../layout/Spinner'
-import ProfileTop from './ProfileTop'
-import ProfileAbout from './ProfileAbout'
-import ProfileExperience from './ProfileExperience'
+import React, { Fragment, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { Link, useParams } from 'react-router-dom';
+import { connect } from 'react-redux';
+import Spinner from '../layout/Spinner';
+import ProfileTop from './ProfileTop';
+import ProfileAbout from './ProfileAbout';
+import ProfileExperience from './ProfileExperience';
 // import ProfileEducation from './ProfileEducation'
 // import ProfileGithub from './ProfileGithub'
 
-import CommentForm from './CommentForm'
-import CommentItem from './CommentItem'
-import { getProfileById } from '../../actions/profile'
+import CommentForm from './CommentForm';
+import CommentItem from './CommentItem';
+import { getProfileById } from '../../actions/profile';
 
 const Profile = ({ getProfileById, profile: { profile }, auth }) => {
-  const { id } = useParams()
+  const { id } = useParams();
+
+  console.log('auth in Profile:', auth);
+
   useEffect(() => {
-    getProfileById(id)
-  }, [getProfileById, id])
+    getProfileById(id);
+  }, [getProfileById, id]);
 
   return (
     <section className="container">
@@ -39,9 +42,12 @@ const Profile = ({ getProfileById, profile: { profile }, auth }) => {
 
           <div className="profile-grid my-1">
             <ProfileTop profile={profile} />
+
             <ProfileAbout profile={profile} />
+
             <div className="profile-exp bg-white p-2">
               <h2 className="text-primary">Experience</h2>
+
               {profile.experience.length > 0 ? (
                 <Fragment>
                   {profile.experience.map((experience) => (
@@ -56,12 +62,10 @@ const Profile = ({ getProfileById, profile: { profile }, auth }) => {
               )}
 
               <CommentForm user={profile.user._id} />
+
               <div className="comments">
                 {profile.comments.map((comment) => (
-                  <CommentItem
-                    key={comment._id}
-                    comment={comment}
-                  />
+                  <CommentItem key={comment._id} comment={comment} />
                 ))}
               </div>
             </div>
@@ -69,18 +73,18 @@ const Profile = ({ getProfileById, profile: { profile }, auth }) => {
         </Fragment>
       )}
     </section>
-  )
-}
+  );
+};
 
 Profile.propTypes = {
   getProfileById: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-}
+};
 
 const mapStateToProps = (state) => ({
   profile: state.profile,
   auth: state.auth,
-})
+});
 
-export default connect(mapStateToProps, { getProfileById })(Profile)
+export default connect(mapStateToProps, { getProfileById })(Profile);

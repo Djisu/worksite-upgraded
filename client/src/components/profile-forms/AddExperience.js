@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { addExperience } from '../../actions/profile'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { addExperience } from '../../actions/profile';
 
 const AddExperience = ({ addExperience }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     company: '',
     title: '',
@@ -14,12 +14,12 @@ const AddExperience = ({ addExperience }) => {
     to: '',
     current: false,
     description: '',
-  })
+  });
 
-  const { company, title, location, from, to, current, description } = formData
+  const { company, title, location, from, to, current, description } = formData;
 
   const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   return (
     <section className="container">
@@ -32,8 +32,8 @@ const AddExperience = ({ addExperience }) => {
       <form
         className="form"
         onSubmit={(e) => {
-          e.preventDefault()
-          addExperience(formData).then(() => navigate('/dashboard'))
+          e.preventDefault();
+          addExperience(formData).then(() => navigate('/dashboard'));
         }}
       >
         <div className="form-group">
@@ -77,7 +77,7 @@ const AddExperience = ({ addExperience }) => {
               checked={current}
               value={current}
               onChange={() => {
-                setFormData({ ...formData, current: !current })
+                setFormData({ ...formData, current: !current });
               }}
             />{' '}
             Current Job
@@ -109,11 +109,11 @@ const AddExperience = ({ addExperience }) => {
         </Link>
       </form>
     </section>
-  )
-}
+  );
+};
 
 AddExperience.propTypes = {
   addExperience: PropTypes.func.isRequired,
-}
+};
 
-export default connect(null, { addExperience })(AddExperience)
+export default connect(null, { addExperience })(AddExperience);

@@ -1,13 +1,13 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const ProfileTop = ({
   profile: {
     status,
     company,
     location,
-    website,
-    social,
+    //website,
+    //social,
     user: { name, avatar },
   },
 }) => {
@@ -41,11 +41,11 @@ const ProfileTop = ({
           : null}
       </div> */}
     </div>
-  )
-}
+  );
+};
 
 ProfileTop.propTypes = {
   profile: PropTypes.object.isRequired,
-}
+};
 
-export default ProfileTop
+export default ProfileTop;

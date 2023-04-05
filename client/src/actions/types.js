@@ -1,25 +1,48 @@
-export const SET_ALERT = 'SET_ALERT'
-export const REMOVE_ALERT = 'REMOVE_ALERT'
-export const REGISTER_SUCCESS = 'REGISTER_SUCCESS'
-export const REGISTER_FAIL = 'REGISTER_FAIL'
-export const USER_LOADED = 'USER_LOADED'
-export const AUTH_ERROR = 'AUTH_ERROR'
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
-export const LOGIN_FAIL = 'LOGIN_FAIL'
-export const LOGOUT = 'LOGOUT'
-export const GET_PROFILE = 'GET_PROFILE'
-export const GET_PROFILES = 'GET_PROFILES'
-export const GET_REPOS = 'GET_REPOS'
-export const NO_REPOS = 'NO_REPOS'
-export const UPDATE_PROFILE = 'UPDATE_PROFILE'
-export const CLEAR_PROFILE = 'CLEAR_PROFILE'
-export const PROFILE_ERROR = 'PROFILE_ERROR'
-export const ACCOUNT_DELETED = 'ACCOUNT_DELETED'
-export const GET_POSTS = 'GET_POSTS'
-export const GET_POST = 'GET_POST'
-export const POST_ERROR = 'POST_ERROR'
-export const UPDATE_LIKES = 'UPDATE_LIKES'
-export const DELETE_POST = 'DELETE_POST'
-export const ADD_POST = 'ADD_POST'
-export const ADD_COMMENT = 'ADD_COMMENT'
-export const REMOVE_COMMENT = 'REMOVE_COMMENT'
+export const SET_ALERT = 'SET_ALERT';
+export const REMOVE_ALERT = 'REMOVE_ALERT';
+export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
+export const REGISTER_FAIL = 'REGISTER_FAIL';
+export const USER_LOADED = 'USER_LOADED';
+export const AUTH_ERROR = 'AUTH_ERROR';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const LOGOUT = 'LOGOUT';
+export const GET_PROFILE = 'GET_PROFILE';
+export const GET_PROFILES = 'GET_PROFILES';
+export const GET_REPOS = 'GET_REPOS';
+export const NO_REPOS = 'NO_REPOS';
+export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+export const CLEAR_PROFILE = 'CLEAR_PROFILE';
+export const PROFILE_ERROR = 'PROFILE_ERROR';
+export const ACCOUNT_DELETED = 'ACCOUNT_DELETED';
+export const GET_POSTS = 'GET_POSTS';
+export const GET_POST = 'GET_POST';
+export const POST_ERROR = 'POST_ERROR';
+export const UPDATE_LIKES = 'UPDATE_LIKES';
+export const DELETE_POST = 'DELETE_POST';
+export const ADD_POST = 'ADD_POST';
+export const ADD_COMMENT = 'ADD_COMMENT';
+export const REMOVE_COMMENT = 'REMOVE_COMMENT';
+
+export const USER_DETAILS_REQUEST = 'USER_DETAILS_REQUEST';
+export const USER_DETAILS_SUCCESS = 'USER_DETAILS_SUCCESS';
+export const USER_DETAILS_FAIL = 'USER_DETAILS_FAIL';
+export const USER_DETAILS_RESET = 'USER_DETAILS_RESET ';
+
+//USER_LIST_REQUEST layout/USER_DELETE_REQUEST
+export const USER_LIST_REQUEST = 'USER_LIST_REQUEST';
+export const USER_LIST_SUCCESS = 'USER_LIST_SUCCESS';
+export const USER_LIST_FAIL = 'USER_LIST_FAIL';
+
+export const USER_UPDATE_RESET = 'USER_UPDATE_RESET';
+
+export const USER_DELETE_REQUEST = 'USER_DELETE_REQUEST';
+export const USER_DELETE_SUCCESS = 'USER_DELETE_SUCCESS';
+export const USER_DELETE_FAIL = 'USER_DELETE_FAIL';
+
+//USER_SIGNOUT
+export const USER_SIGNIN_REQUEST = 'USER_SIGNIN_REQUEST';
+export const USER_SIGNIN_SUCCESS = 'USER_SIGNIN_SUCCESS';
+export const USER_SIGNIN_FAIL = 'USER_SIGNIN_FAIL';
+
+export const USER_SIGNOUT = 'USER_SIGNOUT';

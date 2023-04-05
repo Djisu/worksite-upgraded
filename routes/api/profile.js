@@ -159,6 +159,36 @@ router.get('/user/:user_id', async (req, res) => {
   }
 })
 
+// @route  GET api/profile/:status
+// @desc   GET profile by status
+// @access Public
+router.get('/:status', async (req, res) => {
+  console.log('in profile by status', req.params.status)
+
+  console.log('req==', req)
+
+  try {
+    // const user = await User.findById(req.user.id).select('-password')
+
+    const profile = await Profile.find({
+      status: { $eq: req.params.status },
+    })
+
+    if (!profile) return res.status(400).json({ msg: 'Profile not found' })
+
+    // console.log('profile===', profile)
+
+    res.json(profile)
+  } catch (err) {
+    console.error(err.message)
+
+    if (err.kind == 'ObjectId') {
+      return res.status(400).json({ msg: 'Profile not found' })
+    }
+    res.status(500).send('Server Error')
+  }
+})
+
 // @route  DELETE api/profile
 // @desc   Delete profile, user & posts
 // @access Private

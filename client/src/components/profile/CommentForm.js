@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-import { useParams } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { addComment } from '../../actions/profile'
+import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { addComment } from '../../actions/profile';
 
-const CommentForm = ({ userid, auth, addComment }) => {
-  const [text, setText] = useState('')
+const CommentForm = ({addComment }) => {
+  const [text, setText] = useState('');
 
-  const { id } = useParams()
+  const { id } = useParams();
 
-  console.log('id:', id)
-  // useEffect(() => {
+  console.log('id:', id);
+  // useEffect(() => {   //userid,  auth, 
   //   getProfileById(id)
   // }, [getProfileById, id])
 
@@ -23,9 +23,9 @@ const CommentForm = ({ userid, auth, addComment }) => {
       <form
         className="form my-1"
         onSubmit={(e) => {
-          e.preventDefault()
-          addComment(id, { text })
-          setText('')
+          e.preventDefault();
+          addComment(id, { text });
+          setText('');
         }}
       >
         <textarea
@@ -40,16 +40,16 @@ const CommentForm = ({ userid, auth, addComment }) => {
         <input type="submit" className="btn btn-dark my-1" value="Submit" />
       </form>
     </div>
-  )
-}
+  );
+};
 
 CommentForm.propTypes = {
   addComment: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-}
+//  auth: PropTypes.object.isRequired,
+};
 
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-})
+//const mapStateToProps = (state) => ({
+//  auth: state.auth,
+//});
 
-export default connect(mapStateToProps, { addComment })(CommentForm)
+export default connect(null, { addComment })(CommentForm);
